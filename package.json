@@ -1,0 +1,15 @@
+{
+  "name": "appointment-booking-system",
+  "version": "1.0.0",
+  "description": "Appointment Booking System Root",
+  "scripts": {
+    "start": "concurrently -n \"BACKEND,FRONTEND,ADMIN\" -c \"yellow,blue,magenta\" \"npm run server --prefix backend\" \"npm run dev --prefix frontend\" \"npm run dev --prefix admin\"",
+    "backend": "npm run server --prefix backend",
+    "frontend": "npm run dev --prefix frontend",
+    "admin": "npm run dev --prefix admin",
+    "install-all": "npm install --prefix backend && npm install --prefix frontend && npm install --prefix admin"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
