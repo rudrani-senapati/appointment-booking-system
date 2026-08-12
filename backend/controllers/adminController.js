@@ -62,6 +62,12 @@ const addDoctor = async (req, res) => {
         res.json({ success: true, message: "Doctor Added" })
     } catch (error) {
         console.log(error);
+        console.log("Cloudinary connection failed!");
+
+    console.log("Message:", error.message);
+    console.log("HTTP Code:", error.http_code);
+    console.log("Error:", error.error);
+    console.log(error);
         res.json({ success: false, message: error.message })
 
     }

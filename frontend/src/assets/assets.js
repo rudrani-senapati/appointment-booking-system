@@ -15,6 +15,8 @@ import info_icon from './info_icon.svg'
 import upload_icon from './upload_icon.png'
 import stripe_logo from './stripe_logo.png'
 import razorpay_logo from './razorpay_logo.png'
+
+// Doctor Images
 import doc1 from './doc1.png'
 import doc2 from './doc2.png'
 import doc3 from './doc3.png'
@@ -30,13 +32,20 @@ import doc12 from './doc12.png'
 import doc13 from './doc13.png'
 import doc14 from './doc14.png'
 import doc15 from './doc15.png'
-import Dermatologist from './Dermatologist.svg'
-import Gastroenterologist from './Gastroenterologist.svg'
-import General_physician from './General_physician.svg'
-import Gynecologist from './Gynecologist.svg'
-import Neurologist from './Neurologist.svg'
-import Pediatricians from './Pediatricians.svg'
 
+// Speciality Icons
+import General_physician from './General_Physician.png'
+import Gynecologist from './Gynecologist.png'
+import Dermatologist from './Dermatologist.png'
+import Pediatricians from './Pediatricians.png'
+import Neurologist from './Neurologist.png'
+import Gastroenterologist from './Gastroenterologist.png'
+import Cardiologist from './Cardiologist.png'
+import Orthopedic from './Orthopedic.png'
+import Ophthalmologist from './Ophthalmologist.png'
+import ENT_Specialist from './ENT_Specialist.png'
+import Dentist from './Dentist.png'
+import Pulmonologist from './Pulmonologist.png'
 
 export const assets = {
     appointment_img,
@@ -83,6 +92,31 @@ export const specialityData = [
         speciality: 'Gastroenterologist',
         image: Gastroenterologist
     },
+    {
+        speciality: 'Cardiologist',
+        image: Cardiologist
+    },
+    {
+        speciality: 'Orthopedic',
+        image: Orthopedic
+    },
+    {
+        speciality: 'Ophthalmologist',
+        image: Ophthalmologist
+
+    },
+    {
+        speciality: 'ENT Specialist',
+        image: ENT_Specialist
+    },
+    {
+        speciality: 'Dentist',
+        image: Dentist
+    },
+    {
+        speciality: 'Pulmonologist',
+        image: Pulmonologist
+    }
 ]
 
 export const doctors = [
@@ -93,7 +127,7 @@ export const doctors = [
         speciality: 'General physician',
         degree: 'MBBS',
         experience: '4 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. James has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 50,
         address: {
             line1: '17th Cross, Richmond',
@@ -105,9 +139,9 @@ export const doctors = [
         name: 'Dr. Emily Larson',
         image: doc2,
         speciality: 'Gynecologist',
-        degree: 'MBBS',
+        degree: 'MBBS, MD',
         experience: '3 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. Larson is dedicated to women’s health, providing empathetic and comprehensive care across all stages of life.',
         fees: 60,
         address: {
             line1: '27th Cross, Richmond',
@@ -120,8 +154,8 @@ export const doctors = [
         image: doc3,
         speciality: 'Dermatologist',
         degree: 'MBBS',
-        experience: '1 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        experience: '1 Year',
+        about: 'Dr. Patel focuses on advanced dermatological treatments, cosmetic dermatology, and preventive skin care solutions.',
         fees: 30,
         address: {
             line1: '37th Cross, Richmond',
@@ -133,9 +167,9 @@ export const doctors = [
         name: 'Dr. Christopher Lee',
         image: doc4,
         speciality: 'Pediatricians',
-        degree: 'MBBS',
+        degree: 'MBBS, MD',
         experience: '2 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. Lee specializes in pediatric health, developmental tracking, and gentle, child-focused healthcare strategies.',
         fees: 40,
         address: {
             line1: '47th Cross, Richmond',
@@ -147,9 +181,9 @@ export const doctors = [
         name: 'Dr. Jennifer Garcia',
         image: doc5,
         speciality: 'Neurologist',
-        degree: 'MBBS',
+        degree: 'MBBS, DM',
         experience: '4 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. Garcia is committed to diagnosing and managing complex neurological disorders with patient-first treatment plans.',
         fees: 50,
         address: {
             line1: '57th Cross, Richmond',
@@ -161,9 +195,9 @@ export const doctors = [
         name: 'Dr. Andrew Williams',
         image: doc6,
         speciality: 'Neurologist',
-        degree: 'MBBS',
+        degree: 'MBBS, DM',
         experience: '4 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. Williams has extensive expertise in neurological assessments, cognitive therapies, and comprehensive nervous system care.',
         fees: 50,
         address: {
             line1: '57th Cross, Richmond',
@@ -177,7 +211,7 @@ export const doctors = [
         speciality: 'General physician',
         degree: 'MBBS',
         experience: '4 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. Davis provides comprehensive medical care, focusing on preventive lifestyle medicine and routine primary care.',
         fees: 50,
         address: {
             line1: '17th Cross, Richmond',
@@ -189,9 +223,9 @@ export const doctors = [
         name: 'Dr. Timothy White',
         image: doc8,
         speciality: 'Gynecologist',
-        degree: 'MBBS',
+        degree: 'MBBS, MS',
         experience: '3 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. White provides patient-centered obstetric and gynecological care with a focus on holistic wellness.',
         fees: 60,
         address: {
             line1: '27th Cross, Richmond',
@@ -204,8 +238,8 @@ export const doctors = [
         image: doc9,
         speciality: 'Dermatologist',
         degree: 'MBBS',
-        experience: '1 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        experience: '1 Year',
+        about: 'Dr. Mitchell delivers expert solutions for chronic dermatological conditions, allergies, and everyday skin health.',
         fees: 30,
         address: {
             line1: '37th Cross, Richmond',
@@ -219,7 +253,7 @@ export const doctors = [
         speciality: 'Pediatricians',
         degree: 'MBBS',
         experience: '2 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. King is passionate about childhood nutrition, early childhood wellness, and immunization programs.',
         fees: 40,
         address: {
             line1: '47th Cross, Richmond',
@@ -231,9 +265,9 @@ export const doctors = [
         name: 'Dr. Zoe Kelly',
         image: doc11,
         speciality: 'Gastroenterologist',
-        degree: 'MBBS',
+        degree: 'MBBS, MD',
         experience: '4 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+        about: 'Dr. Kelly specializes in digestive health, endoscopy diagnostics, and gut microbiome optimization.',
         fees: 50,
         address: {
             line1: '57th Cross, Richmond',
@@ -244,11 +278,11 @@ export const doctors = [
         _id: 'doc12',
         name: 'Dr. Patrick Harris',
         image: doc12,
-        speciality: 'Neurologist',
-        degree: 'MBBS',
+        speciality: 'Cardiologist',
+        degree: 'MBBS, MD',
         experience: '4 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fees: 50,
+        about: 'Dr. Harris provides state-of-the-art cardiac diagnostics, hypertension management, and preventive heart health plans.',
+        fees: 70,
         address: {
             line1: '57th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -258,11 +292,11 @@ export const doctors = [
         _id: 'doc13',
         name: 'Dr. Chloe Evans',
         image: doc13,
-        speciality: 'General physician',
-        degree: 'MBBS',
+        speciality: 'Orthopedic',
+        degree: 'MBBS, MS',
         experience: '4 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fees: 50,
+        about: 'Dr. Evans focuses on joint mobility, fracture repair, and sports injury rehabilitation.',
+        fees: 65,
         address: {
             line1: '17th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -272,11 +306,11 @@ export const doctors = [
         _id: 'doc14',
         name: 'Dr. Ryan Martinez',
         image: doc14,
-        speciality: 'Gynecologist',
-        degree: 'MBBS',
+        speciality: 'Ophthalmologist',
+        degree: 'MBBS, MS',
         experience: '3 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fees: 60,
+        about: 'Dr. Martinez specializes in comprehensive vision assessments, refractive errors, and eye care therapies.',
+        fees: 45,
         address: {
             line1: '27th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -286,14 +320,42 @@ export const doctors = [
         _id: 'doc15',
         name: 'Dr. Amelia Hill',
         image: doc15,
-        speciality: 'Dermatologist',
-        degree: 'MBBS',
-        experience: '1 Years',
-        about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fees: 30,
+        speciality: 'ENT Specialist',
+        degree: 'MBBS, MS',
+        experience: '1 Year',
+        about: 'Dr. Hill focuses on ear, nose, and throat disorders, sinus therapies, and hearing wellness.',
+        fees: 40,
         address: {
             line1: '37th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
         }
     },
+    {
+        _id: 'doc16',
+        name: 'Dr. Lucas Brown',
+        image: doc16,
+        speciality: 'Dentist',
+        degree: 'BDS, MDS',
+        experience: '5 Years',
+        about: 'Dr. Brown is committed to modern oral health, cosmetic dental corrections, and preventive dentistry.',
+        fees: 35,
+        address: {
+            line1: '67th Cross, Richmond',
+            line2: 'Circle, Ring Road, London'
+        }
+    },
+    {
+        _id: 'doc17',
+        name: 'Dr. Sophia Taylor',
+        image: doc17,
+        speciality: 'Pulmonologist',
+        degree: 'MBBS, MD',
+        experience: '6 Years',
+        about: 'Dr. Taylor provides expert care for respiratory issues, asthma management, and lung wellness.',
+        fees: 60,
+        address: {
+            line1: '77th Cross, Richmond',
+            line2: 'Circle, Ring Road, London'
+        }
+    }
 ]
