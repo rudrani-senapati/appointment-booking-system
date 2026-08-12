@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "carepulse-api-collection-id",
+		"name": "CarePulse Healthcare API Collection",
+		"description": "Complete REST API collection for testing CarePulse Doctor Appointment Booking & Careers System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Careers",
+			"item": [
+				{
+					"name": "Submit Job Application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"jobId\": \"job-1\",\n  \"jobTitle\": \"Senior Full-Stack Engineer\",\n  \"name\": \"Rudrani Senapati\",\n  \"email\": \"rudrani@gmail.com\",\n  \"phone\": \"+1 555-0132\",\n  \"experience\": \"3 - 5 Years\",\n  \"portfolio\": \"https://linkedin.com/in/rudrani\",\n  \"coverLetter\": \"Excited to contribute to CarePulse healthcare ecosystem!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/career/apply",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"career",
+								"apply"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Submit Job Application (Plural)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"jobId\": \"job-1\",\n  \"jobTitle\": \"Senior Full-Stack Engineer\",\n  \"name\": \"Rudrani Senapati\",\n  \"email\": \"rudrani@gmail.com\",\n  \"phone\": \"+1 555-0132\",\n  \"experience\": \"3 - 5 Years\",\n  \"portfolio\": \"https://linkedin.com/in/rudrani\",\n  \"coverLetter\": \"Excited to contribute to CarePulse healthcare ecosystem!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/careers/apply",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"careers",
+								"apply"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Job Applications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/career/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"career",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Doctors",
+			"item": [
+				{
+					"name": "Get All Doctors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/doctor/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"doctor",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Auth & Profile",
+			"item": [
+				{
+					"name": "User Registration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

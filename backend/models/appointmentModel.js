@@ -12,7 +12,11 @@ const appointmentSchema = new mongoose.Schema({
     date: { type: Number, required: true },
     cancelled: { type: Boolean, default: false },
     payment: { type: Boolean, default: false },
-    isCompleted: { type: Boolean, default: false }
+    isCompleted: { type: Boolean, default: false },
+    consultationType: { type: String, default: 'In-Clinic' },
+    meetingLink: { type: String, default: '' },
+    prescription: { type: Object, default: null },
+    paymentDeadline: { type: Date }
 })
 
 

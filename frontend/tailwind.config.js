@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       colors:{
-        'primary':"#5f6FFF"
+        'primary': "#5f6FFF",
+        'primary-hover': "#4b55e6"
       },
       gridTemplateColumns:{
         'auto':'repeat(auto-fill,minmax(200px,1fr))'

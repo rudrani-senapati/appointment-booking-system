@@ -128,7 +128,7 @@ export const doctors = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. James has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
-        fees: 50,
+        fees: 500,
         address: {
             line1: '17th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -142,7 +142,7 @@ export const doctors = [
         degree: 'MBBS, MD',
         experience: '3 Years',
         about: 'Dr. Larson is dedicated to women’s health, providing empathetic and comprehensive care across all stages of life.',
-        fees: 60,
+        fees: 600,
         address: {
             line1: '27th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -156,7 +156,7 @@ export const doctors = [
         degree: 'MBBS',
         experience: '1 Year',
         about: 'Dr. Patel focuses on advanced dermatological treatments, cosmetic dermatology, and preventive skin care solutions.',
-        fees: 30,
+        fees: 300,
         address: {
             line1: '37th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -170,7 +170,7 @@ export const doctors = [
         degree: 'MBBS, MD',
         experience: '2 Years',
         about: 'Dr. Lee specializes in pediatric health, developmental tracking, and gentle, child-focused healthcare strategies.',
-        fees: 40,
+        fees: 400,
         address: {
             line1: '47th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -184,7 +184,7 @@ export const doctors = [
         degree: 'MBBS, DM',
         experience: '4 Years',
         about: 'Dr. Garcia is committed to diagnosing and managing complex neurological disorders with patient-first treatment plans.',
-        fees: 50,
+        fees: 500,
         address: {
             line1: '57th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -198,7 +198,7 @@ export const doctors = [
         degree: 'MBBS, DM',
         experience: '4 Years',
         about: 'Dr. Williams has extensive expertise in neurological assessments, cognitive therapies, and comprehensive nervous system care.',
-        fees: 50,
+        fees: 500,
         address: {
             line1: '57th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -212,7 +212,7 @@ export const doctors = [
         degree: 'MBBS',
         experience: '4 Years',
         about: 'Dr. Davis provides comprehensive medical care, focusing on preventive lifestyle medicine and routine primary care.',
-        fees: 50,
+        fees: 500,
         address: {
             line1: '17th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -226,7 +226,7 @@ export const doctors = [
         degree: 'MBBS, MS',
         experience: '3 Years',
         about: 'Dr. White provides patient-centered obstetric and gynecological care with a focus on holistic wellness.',
-        fees: 60,
+        fees: 600,
         address: {
             line1: '27th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -240,7 +240,7 @@ export const doctors = [
         degree: 'MBBS',
         experience: '1 Year',
         about: 'Dr. Mitchell delivers expert solutions for chronic dermatological conditions, allergies, and everyday skin health.',
-        fees: 30,
+        fees: 300,
         address: {
             line1: '37th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -254,7 +254,7 @@ export const doctors = [
         degree: 'MBBS',
         experience: '2 Years',
         about: 'Dr. King is passionate about childhood nutrition, early childhood wellness, and immunization programs.',
-        fees: 40,
+        fees: 400,
         address: {
             line1: '47th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -268,7 +268,7 @@ export const doctors = [
         degree: 'MBBS, MD',
         experience: '4 Years',
         about: 'Dr. Kelly specializes in digestive health, endoscopy diagnostics, and gut microbiome optimization.',
-        fees: 50,
+        fees: 500,
         address: {
             line1: '57th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -282,7 +282,7 @@ export const doctors = [
         degree: 'MBBS, MD',
         experience: '4 Years',
         about: 'Dr. Harris provides state-of-the-art cardiac diagnostics, hypertension management, and preventive heart health plans.',
-        fees: 70,
+        fees: 700,
         address: {
             line1: '57th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -296,7 +296,7 @@ export const doctors = [
         degree: 'MBBS, MS',
         experience: '4 Years',
         about: 'Dr. Evans focuses on joint mobility, fracture repair, and sports injury rehabilitation.',
-        fees: 65,
+        fees: 650,
         address: {
             line1: '17th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -310,7 +310,7 @@ export const doctors = [
         degree: 'MBBS, MS',
         experience: '3 Years',
         about: 'Dr. Martinez specializes in comprehensive vision assessments, refractive errors, and eye care therapies.',
-        fees: 45,
+        fees: 450,
         address: {
             line1: '27th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -324,7 +324,7 @@ export const doctors = [
         degree: 'MBBS, MS',
         experience: '1 Year',
         about: 'Dr. Hill focuses on ear, nose, and throat disorders, sinus therapies, and hearing wellness.',
-        fees: 40,
+        fees: 400,
         address: {
             line1: '37th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -333,12 +333,12 @@ export const doctors = [
     {
         _id: 'doc16',
         name: 'Dr. Lucas Brown',
-        image: doc16,
+        image: doc1,
         speciality: 'Dentist',
         degree: 'BDS, MDS',
         experience: '5 Years',
         about: 'Dr. Brown is committed to modern oral health, cosmetic dental corrections, and preventive dentistry.',
-        fees: 35,
+        fees: 350,
         address: {
             line1: '67th Cross, Richmond',
             line2: 'Circle, Ring Road, London'
@@ -347,12 +347,12 @@ export const doctors = [
     {
         _id: 'doc17',
         name: 'Dr. Sophia Taylor',
-        image: doc17,
+        image: doc2,
         speciality: 'Pulmonologist',
         degree: 'MBBS, MD',
         experience: '6 Years',
         about: 'Dr. Taylor provides expert care for respiratory issues, asthma management, and lung wellness.',
-        fees: 60,
+        fees: 600,
         address: {
             line1: '77th Cross, Richmond',
             line2: 'Circle, Ring Road, London'

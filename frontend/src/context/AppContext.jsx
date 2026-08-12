@@ -1,66 +1,79 @@
 import { createContext, useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from "react-toastify";
+import { doctors as initialDoctors } from '../assets/assets';
 
 export const AppContext = createContext()
 
 const AppContextProvider = (props) => {
-    const currencySymbol = '$'
+    const currencySymbol = '₹'
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
-    const [doctors, setDoctors] = useState([])
-    // 💡 Fix 1: Initialize token to null, not the boolean false, for cleaner checks.
-    const [token, setToken] = useState(localStorage.getItem('token') || null) 
+    const [doctors, setDoctors] = useState(initialDoctors)
+
+    // Helper to get initial valid token
+    const getInitialToken = () => {
+        const stored = localStorage.getItem('token')
+        if (!stored || stored === 'undefined' || stored === 'null' || stored === 'false') {
+            localStorage.removeItem('token')
+            return null
+        }
+        return stored
+    }
+
+    const [token, setToken] = useState(getInitialToken()) 
     const [userData, setUserData] = useState(false)
 
     // --- Data Fetching Functions ---
 
     const getDoctorsData = async () => {
         try {
-            // NOTE: Assuming this endpoint does NOT require authentication
-            const {data} = await axios.get(backendUrl + '/api/doctor/list')
-            if (data.success) {
+            const { data } = await axios.get(backendUrl + '/api/doctor/list')
+            if (data.success && data.doctors && data.doctors.length > 0) {
                 setDoctors(data.doctors)
             } else {
-                toast.error(data.message)
+                setDoctors(initialDoctors)
             }
         } catch (error) {
-            console.error("Error fetching doctors data:", error); // Use console.error for clarity
-            // In a real app, you might only show error.response.data.message
-            toast.error(error.message) 
+            console.error("Error fetching doctors data:", error);
         }
     }
 
-    const loadUserProfileData = async () => {
+    const loadUserProfileData = async (currentToken) => {
+        const activeToken = currentToken || token
+        if (!activeToken || typeof activeToken !== 'string') return
+
         try {
-            // No need to pass headers here, as Fix 3 handles it globally!
-            const {data} = await axios.get(backendUrl + '/api/user/get-profile') 
+            const { data } = await axios.get(backendUrl + '/api/user/get-profile', {
+                headers: { 
+                    token: activeToken,
+                    Authorization: `Bearer ${activeToken}`
+                }
+            }) 
             
             if (data.success) {
                 setUserData(data.userData)
             } else {
-                toast.error(data.message)
+                // If token is invalid or expired
+                localStorage.removeItem('token')
+                setToken(null)
+                setUserData(false)
             }
         } catch (error) {
             console.error("Error loading user profile:", error);
-            // This is where the 401 error message would appear in the console.
-            // You can add logic to log the user out on a 401 response:
-            if (error.response && error.response.status === 401) {
-                toast.error("Session expired or unauthorized. Please log in again.");
-                setToken(null);
-                localStorage.removeItem('token');
-            } else {
-                toast.error("Failed to load profile.");
-            }
+            // On 401 Unauthorized or expired token, clear session silently
+            localStorage.removeItem('token')
+            setToken(null)
+            setUserData(false)
         }
     }
 
     // --- Context Value ---
 
-    const value ={
+    const value = {
         doctors, getDoctorsData,
         currencySymbol,
-        token,setToken,
+        token, setToken,
         backendUrl,
         userData, setUserData,
         loadUserProfileData
@@ -70,23 +83,19 @@ const AppContextProvider = (props) => {
 
     useEffect(() => {
         getDoctorsData()
-    },[]) // Run once on component mount
+    }, [])
 
-    // 💡 Fix 3: Global Axios Header Configuration
-    useEffect (() => {
-        // Only proceed if a valid token (non-null string) exists
-        if (token && typeof token === 'string') {
-            // Set the Authorization header globally for all authenticated requests
+    useEffect(() => {
+        if (token && typeof token === 'string' && token !== 'undefined') {
+            axios.defaults.headers.common['token'] = token;
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            
-            // Now, load the protected data
-            loadUserProfileData();
+            loadUserProfileData(token);
         } else {
-            // When token is removed (e.g., on logout), clear the global header
+            delete axios.defaults.headers.common['token'];
             delete axios.defaults.headers.common['Authorization'];
             setUserData(false);
         }
-    },[token]) // Rerun whenever the token state changes
+    }, [token])
 
     return (
         <AppContext.Provider value={value}>

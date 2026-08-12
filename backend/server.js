@@ -6,6 +6,7 @@ import connectCloudinary from './config/cloudinary.js'
 import adminRouter from './routes/adminRoute.js'
 import doctorRouter from './routes/doctorRout.js'
 import userRouter from './routes/userRoute.js'
+import careerRouter from './routes/careerRoute.js'
 
 
 // app config
@@ -26,6 +27,8 @@ app.use(cors())
 app.use('/api/admin',adminRouter)
 app.use('/api/doctor',doctorRouter)
 app.use('/api/user',userRouter)
+app.use('/api/career',careerRouter)
+app.use('/api/careers',careerRouter)
 
 // localhost:4000/api/admin/add-doctor
 

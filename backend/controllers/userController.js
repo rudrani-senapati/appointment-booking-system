@@ -139,14 +139,12 @@ const bookAppointment = async (req, res) => {
 
     try {
 
-        const { userId, docId, slotDate, slotTime } = req.body
+        const { userId, docId, slotDate, slotTime, consultationType } = req.body
         const docData = await doctorModel.findById(docId).select('-password')
-
 
         if (!docData.available) {
             return res.json({ success: false, message: 'Doctor not available' })
         }
-
 
         let slots_booked = docData.slots_booked
 
@@ -166,6 +164,23 @@ const bookAppointment = async (req, res) => {
 
         delete docData.slots_booked
 
+        const type = consultationType === 'Online Consultation' ? 'Online Consultation' : 'In-Clinic'
+        const roomId = 'CarePulse-Consult-' + Math.random().toString(36).substring(2, 9)
+        const meetingLink = type === 'Online Consultation' ? `https://meet.jit.si/${roomId}` : ''
+
+        // Generate a digital prescription template for reference
+        const samplePrescription = {
+            rxId: 'CP-RX-' + Math.floor(100000 + Math.random() * 900000),
+            issuedDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+            diagnosis: `General Medical Consultation - ${docData.speciality}`,
+            notes: 'Patient advised to take rest, maintain proper hydration, and follow regular dosage routines. Follow-up after 7 days if symptoms persist.',
+            medicines: [
+                { name: 'Amoxicillin Trihydrate 500mg', dosage: '1 Capsule (1-0-1)', duration: '5 Days', instructions: 'Take after food with warm water' },
+                { name: 'Paracetamol 650mg (Dolo)', dosage: '1 Tablet SOS', duration: '3 Days', instructions: 'Take for mild fever or muscle ache' },
+                { name: 'Multivitamin & Zinc Cap', dosage: '1 Capsule (0-0-1)', duration: '10 Days', instructions: 'Take once daily before bed' }
+            ]
+        }
+
         const appointmentData = {
             userId,
             docId,
@@ -174,6 +189,10 @@ const bookAppointment = async (req, res) => {
             amount: docData.fees,
             slotTime,
             slotDate,
+            consultationType: type,
+            meetingLink: meetingLink,
+            prescription: samplePrescription,
+            paymentDeadline: new Date(Date.now() + 15 * 60 * 1000), // 15-minute payment deadline window to prevent wasting doctor time
             date: Date.now()
         }
 
@@ -183,7 +202,7 @@ const bookAppointment = async (req, res) => {
         // save new slots data in docData
         await doctorModel.findByIdAndUpdate(docId, { slots_booked })
 
-        res.json({ success: true, message: 'Appointment Booked' })
+        res.json({ success: true, message: `Appointment Booked (${type})` })
 
     } catch (error) {
         console.log(error);
@@ -269,7 +288,7 @@ const paymentRazorpay = async (req, res) => {
         // creating options for razorpay payment
         const options = {
             amount: appointmentData.amount * 100,
-            currency: process.env.CURRENCY,
+            currency: process.env.CURRENCY || 'INR',
             receipt: appointmentId,
         }
 
@@ -305,4 +324,22 @@ const verifyRazorpay = async (req,res) => {
     }
 }
 
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, paymentRazorpay, verifyRazorpay }
+// API to mark consultation as completed after video call
+const completeAppointment = async (req, res) => {
+    try {
+        const { userId, appointmentId } = req.body
+        const appointmentData = await appointmentModel.findById(appointmentId)
+
+        if (appointmentData && appointmentData.userId === userId) {
+            await appointmentModel.findByIdAndUpdate(appointmentId, { isCompleted: true })
+            res.json({ success: true, message: 'Consultation Completed Successfully' })
+        } else {
+            res.json({ success: false, message: 'Unauthorized Action' })
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message })
+    }
+}
+
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, paymentRazorpay, verifyRazorpay, completeAppointment }
