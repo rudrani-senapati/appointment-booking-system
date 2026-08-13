@@ -229,8 +229,8 @@ const Login = () => {
 
       </div>
 
-      {/* 🔐 Right 50% Column: Form Panel — scrollable, top-anchored, never hides content */}
-      <div className='lg:col-span-6 h-full overflow-y-auto bg-white'>
+      {/* 🔐 Right 50% Column: Form Panel — scrollable on all screen sizes */}
+      <div className='lg:col-span-6 h-full overflow-y-auto bg-white p-4 sm:p-8 xl:p-12'>
         <div className='flex items-start justify-center min-h-full py-8 px-4 sm:px-8'>
           
           <div className='w-full max-w-md space-y-4 sm:space-y-5'>

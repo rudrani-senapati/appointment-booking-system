@@ -187,8 +187,8 @@ const Login = ({ initialState = 'Login' }) => {
 
       </div>
 
-      {/* Right 50% Column: Responsive Form Panel (Perfect Top Alignment on Mobile, Split-Screen on Desktop) */}
-      <div className='col-span-1 lg:col-span-6 bg-white p-5 sm:p-8 xl:p-14 flex flex-col justify-start lg:justify-between h-auto lg:h-full min-h-screen lg:min-h-0 overflow-y-auto lg:overflow-hidden border-l border-slate-200/80 gap-3 lg:gap-0'>
+      {/* Right 50% Column: Responsive Form Panel (Scrollable on all screens) */}
+      <div className='col-span-1 lg:col-span-6 bg-white p-4 sm:p-8 xl:p-12 flex flex-col justify-start h-full overflow-y-auto border-l border-slate-200/80 gap-3'>
         
         {/* Top Header Bar */}
         <div className='flex items-center justify-between gap-4 max-w-xl w-full mx-auto mb-1 lg:mb-0'>
