@@ -39,6 +39,12 @@ const Appointment = () => {
       if (today.getDate() === currentDate.getDate()) {
         currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10)
         currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0)
+        // If current time passed today's end time (9 PM), start from tomorrow morning
+        if (currentDate >= endTime) {
+          currentDate.setDate(currentDate.getDate() + 1)
+          currentDate.setHours(10, 0, 0, 0)
+          endTime.setDate(endTime.getDate() + 1)
+        }
       } else {
         currentDate.setHours(10)
         currentDate.setMinutes(0)
@@ -66,6 +72,17 @@ const Appointment = () => {
         }
 
         currentDate.setMinutes(currentDate.getMinutes() + 30)
+      }
+
+      // Ensure fallback date object if all slots for today were booked or elapsed
+      if (timeSlots.length === 0) {
+        let fallbackDate = new Date(today)
+        fallbackDate.setDate(today.getDate() + i)
+        fallbackDate.setHours(10, 0, 0, 0)
+        timeSlots.push({
+          dateTime: fallbackDate,
+          time: '10:00 AM'
+        })
       }
 
       setDocSlots(prev => ([...prev, timeSlots]))
@@ -107,6 +124,7 @@ const Appointment = () => {
 
   useEffect(() => {
     fetchDocInfo()
+    window.scrollTo(0, 0)
   }, [doctors, docId])
 
   useEffect(() => {
@@ -183,101 +201,220 @@ const Appointment = () => {
         </div>
       </div>
 
-      {/* ------------------ Booking Mode & Slots ---------------------- */}
-      <div className='mt-10 bg-white border-2 border-indigo-200/90 rounded-3xl p-6 sm:p-10 shadow-xl shadow-slate-300/60 space-y-8'>
-        
-        {/* Consultation Mode Selector */}
-        <div className='space-y-3'>
-          <h2 className='font-black text-slate-900 text-lg tracking-tight flex items-center gap-2'>
-            <span>🩺</span> Choose Consultation Mode
-          </h2>
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-            <div 
-              onClick={() => setConsultationType('In-Clinic')}
-              className={`p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 flex items-center gap-4 ${
-                consultationType === 'In-Clinic'
-                  ? 'border-indigo-600 bg-indigo-50/70 shadow-md shadow-indigo-100'
-                  : 'border-slate-200 bg-slate-50 hover:border-indigo-300'
-              }`}
-            >
-              <div className='w-12 h-12 rounded-xl bg-white text-indigo-600 flex items-center justify-center text-2xl font-bold shadow-sm shrink-0'>
-                🏥
-              </div>
-              <div>
-                <h3 className='font-extrabold text-slate-900 text-sm sm:text-base'>In-Clinic Visit</h3>
-                <p className='text-xs text-slate-500 font-medium mt-0.5'>Visit doctor's physical medical center</p>
-              </div>
-            </div>
-
-            <div 
-              onClick={() => setConsultationType('Online Consultation')}
-              className={`p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 flex items-center gap-4 ${
-                consultationType === 'Online Consultation'
-                  ? 'border-indigo-600 bg-indigo-50/70 shadow-md shadow-indigo-100'
-                  : 'border-slate-200 bg-slate-50 hover:border-indigo-300'
-              }`}
-            >
-              <div className='w-12 h-12 rounded-xl bg-white text-indigo-600 flex items-center justify-center text-2xl font-bold shadow-sm shrink-0'>
-                💻
-              </div>
-              <div>
-                <div className='flex items-center gap-2'>
-                  <h3 className='font-extrabold text-slate-900 text-sm sm:text-base'>Online Video Consultation</h3>
-                  <span className='bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider'>Live HD</span>
-                </div>
-                <p className='text-xs text-slate-500 font-medium mt-0.5'>HD Telehealth call + E-Prescription</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Days Selector */}
-        <div className='space-y-3 pt-4 border-t border-slate-100'>
-          <h2 className='font-black text-slate-900 text-lg tracking-tight'>Select Booking Slot</h2>
+        {/* ------------------ Booking Mode & Slots Section ---------------------- */}
+        <div className='mt-10 bg-gradient-to-b from-white via-indigo-50/30 to-violet-50/20 border border-indigo-100 rounded-3xl p-6 sm:p-10 shadow-2xl shadow-indigo-100/60 space-y-8 backdrop-blur-xl'>
           
-          <div className='flex gap-4 items-center w-full overflow-x-auto pt-2 pb-2'>
-            {docSlots.length > 0 && docSlots.map((item, index) => (
-              <div 
-                onClick={() => setSlotIndex(index)} 
-                className={`text-center py-4 px-4 min-w-20 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-1 ${
-                  slotIndex === index 
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200 font-semibold scale-105' 
-                    : 'bg-slate-50 text-slate-600 border border-slate-200/80 hover:bg-indigo-50/50 hover:border-indigo-200'
-                }`} 
-                key={index}
-              >
-                <p className='text-xs uppercase tracking-wider font-semibold opacity-80'>{item[0] && daysOfWeek[item[0].dateTime.getDay()]}</p>
-                <p className='text-lg font-bold'>{item[0] && item[0].dateTime.getDate()}</p>
+          {/* Header Banner */}
+          <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-6 border-b border-indigo-100/80'>
+            <div>
+              <div className='flex items-center gap-2 mb-1'>
+                <span className='px-3 py-1 bg-indigo-100 text-indigo-700 font-extrabold text-[10px] uppercase tracking-wider rounded-full'>
+                  ⚡ Fast-Track Booking
+                </span>
+                <span className='px-3 py-1 bg-emerald-100 text-emerald-700 font-extrabold text-[10px] uppercase tracking-wider rounded-full flex items-center gap-1'>
+                  <span className='w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse'></span> Guaranteed Slot
+                </span>
               </div>
-            ))}
+              <h2 className='font-black text-slate-900 text-xl sm:text-2xl tracking-tight'>
+                Select Consultation & Booking Slot
+              </h2>
+            </div>
+            <div className='text-left sm:text-right shrink-0 bg-white/90 p-3 px-4 rounded-2xl border border-indigo-100 shadow-sm'>
+              <p className='text-[10px] font-extrabold text-slate-400 uppercase tracking-wider'>Consultation Fee</p>
+              <p className='text-2xl font-black text-indigo-600'>{currencySymbol}{docInfo.fees}</p>
+            </div>
           </div>
 
-          {/* Timeslots Selector */}
-          <div className='flex items-center gap-3 w-full overflow-x-auto pt-2 pb-2'>
-            {docSlots.length > 0 && docSlots[slotIndex] && docSlots[slotIndex].map((item, index) => (
-              <p 
-                onClick={() => setSlotTime(item.time)} 
-                className={`text-xs font-semibold flex-shrink-0 px-6 py-2.5 rounded-full cursor-pointer transition-all duration-200 ${
-                  item.time === slotTime 
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-100' 
-                    : 'text-slate-600 bg-slate-50 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50'
-                }`} 
-                key={index}
+          {/* 1. Consultation Mode Selector Cards */}
+          <div className='space-y-3'>
+            <h3 className='font-extrabold text-slate-800 text-sm sm:text-base flex items-center gap-2'>
+              <span>1️⃣</span> Choose Mode of Consultation
+            </h3>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+              {/* In-Clinic Card */}
+              <div 
+                onClick={() => setConsultationType('In-Clinic')}
+                className={`p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 flex items-center justify-between gap-4 relative overflow-hidden ${
+                  consultationType === 'In-Clinic'
+                    ? 'border-indigo-600 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-xl shadow-indigo-200 scale-[1.01]'
+                    : 'border-indigo-100 bg-white text-slate-800 hover:border-indigo-300 hover:bg-indigo-50/40 shadow-sm'
+                }`}
               >
-                {item.time.toLowerCase()}
-              </p>
-            ))}
+                <div className='flex items-center gap-4'>
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl font-bold shrink-0 ${
+                    consultationType === 'In-Clinic' ? 'bg-white/20 text-white' : 'bg-indigo-50 text-indigo-600'
+                  }`}>
+                    🏥
+                  </div>
+                  <div>
+                    <h4 className='font-extrabold text-sm sm:text-base'>In-Clinic Visit</h4>
+                    <p className={`text-xs mt-0.5 font-medium ${consultationType === 'In-Clinic' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                      Visit doctor's medical facility
+                    </p>
+                  </div>
+                </div>
+                {consultationType === 'In-Clinic' && (
+                  <span className='bg-white text-indigo-600 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0 shadow-sm'>
+                    ✓ Active
+                  </span>
+                )}
+              </div>
+
+              {/* Online Video Card */}
+              <div 
+                onClick={() => setConsultationType('Online Consultation')}
+                className={`p-5 rounded-2xl border-2 cursor-pointer transition-all duration-300 flex items-center justify-between gap-4 relative overflow-hidden ${
+                  consultationType === 'Online Consultation'
+                    ? 'border-indigo-600 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-xl shadow-indigo-200 scale-[1.01]'
+                    : 'border-indigo-100 bg-white text-slate-800 hover:border-indigo-300 hover:bg-indigo-50/40 shadow-sm'
+                }`}
+              >
+                <div className='flex items-center gap-4'>
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl font-bold shrink-0 ${
+                    consultationType === 'Online Consultation' ? 'bg-white/20 text-white' : 'bg-indigo-50 text-indigo-600'
+                  }`}>
+                    💻
+                  </div>
+                  <div>
+                    <div className='flex items-center gap-2'>
+                      <h4 className='font-extrabold text-sm sm:text-base'>Online Video Consultation</h4>
+                      <span className='bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider'>
+                        HD Video
+                      </span>
+                    </div>
+                    <p className={`text-xs mt-0.5 font-medium ${consultationType === 'Online Consultation' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                      Instant Call + E-Prescription
+                    </p>
+                  </div>
+                </div>
+                {consultationType === 'Online Consultation' && (
+                  <span className='bg-white text-indigo-600 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shrink-0 shadow-sm'>
+                    ✓ Active
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
 
-          <button 
-            onClick={bookAppointment} 
-            className='w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white text-sm font-extrabold px-12 py-4 rounded-2xl mt-4 shadow-lg shadow-indigo-200 transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider'
-          >
-            Confirm & Book ({consultationType})
-          </button>
-        </div>
+          {/* 2. 7-Day Date Grid */}
+          <div className='space-y-3 pt-4 border-t border-indigo-100/80'>
+            <div className='flex items-center justify-between'>
+              <h3 className='font-extrabold text-slate-800 text-sm sm:text-base flex items-center gap-2'>
+                <span>2️⃣</span> Select Appointment Date
+              </h3>
+              <span className='text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100'>
+                📅 Next 7 Days
+              </span>
+            </div>
+            
+            <div className='grid grid-cols-7 gap-1.5 sm:gap-3 w-full py-1 overflow-x-auto scrollbar-none'>
+              {docSlots.length > 0 && docSlots.map((item, index) => {
+                const dateObj = item[0] && item[0].dateTime
+                const dayName = dateObj ? daysOfWeek[dateObj.getDay()] : ''
+                const dayNum = dateObj ? dateObj.getDate() : ''
+                const monthName = dateObj ? dateObj.toLocaleString('default', { month: 'short' }) : ''
+                const isSelected = slotIndex === index
 
-      </div>
+                return (
+                  <div 
+                    key={index}
+                    onClick={() => {
+                      setSlotIndex(index)
+                      if (item.length > 0 && !item.some(s => s.time === slotTime)) {
+                        setSlotTime(item[0].time)
+                      }
+                    }} 
+                    className={`text-center py-2.5 sm:py-3 px-1 sm:px-2 rounded-2xl cursor-pointer transition-all duration-300 flex flex-col items-center justify-center gap-0.5 sm:gap-1 border shadow-sm min-w-[42px] sm:min-w-0 ${
+                      isSelected 
+                        ? 'bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-600 text-white border-indigo-500 shadow-xl shadow-indigo-300/80 font-bold scale-105 ring-2 ring-indigo-400' 
+                        : 'bg-white text-slate-700 border-indigo-100 hover:border-indigo-400 hover:bg-indigo-50/60'
+                    }`} 
+                  >
+                    <p className={`text-[9px] sm:text-xs uppercase tracking-wider font-extrabold ${isSelected ? 'text-indigo-200' : 'text-slate-400'}`}>
+                      {dayName}
+                    </p>
+                    <p className='text-sm sm:text-xl font-black leading-none my-0.5'>
+                      {dayNum}
+                    </p>
+                    <p className={`text-[8px] sm:text-[9px] font-bold uppercase tracking-widest ${isSelected ? 'text-indigo-100' : 'text-slate-400'}`}>
+                      {monthName}
+                    </p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* 3. Multi-Row Flex-Wrap Time Slots */}
+          <div className='space-y-3 pt-4 border-t border-indigo-100/80'>
+            <div className='flex items-center justify-between'>
+              <h3 className='font-extrabold text-slate-800 text-sm sm:text-base flex items-center gap-2'>
+                <span>3️⃣</span> Select Time Slot
+              </h3>
+              {docSlots[slotIndex] && (
+                <span className='text-xs font-bold text-slate-500'>
+                  {docSlots[slotIndex].length} slots available
+                </span>
+              )}
+            </div>
+
+            <div className='flex flex-wrap items-center gap-2 sm:gap-2.5 w-full py-2'>
+              {docSlots.length > 0 && docSlots[slotIndex] && docSlots[slotIndex].map((item, index) => {
+                const isSelected = item.time === slotTime
+                return (
+                  <button 
+                    type="button"
+                    key={index}
+                    onClick={() => setSlotTime(item.time)} 
+                    className={`text-xs font-bold px-4 py-2.5 rounded-full cursor-pointer transition-all duration-200 flex items-center gap-1.5 shadow-sm ${
+                      isSelected 
+                        ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-200 scale-105 border border-indigo-500' 
+                        : 'text-slate-700 bg-white border border-indigo-100 hover:border-indigo-400 hover:bg-indigo-50/50'
+                    }`}
+                  >
+                    <span>⏰</span>
+                    <span>{item.time}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* 4. Live Interactive Booking Summary & CTA Button */}
+          {slotTime && docSlots[slotIndex] && docSlots[slotIndex][0] && (
+            <div className='bg-gradient-to-r from-indigo-600 via-indigo-600 to-violet-600 text-white rounded-3xl p-6 shadow-2xl shadow-indigo-300/80 space-y-4 animate-fadeIn'>
+              <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-indigo-400/50'>
+                <div className='space-y-1'>
+                  <span className='bg-white/20 text-white text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full'>
+                    ✨ Booking Summary
+                  </span>
+                  <h4 className='text-base sm:text-lg font-black text-white mt-1'>
+                    {consultationType === 'Online Consultation' ? '💻 Online Video Call' : '🏥 In-Clinic Visit'} with Dr. {docInfo.name}
+                  </h4>
+                  <p className='text-xs font-bold text-indigo-100 flex flex-wrap items-center gap-3 mt-1'>
+                    <span>📅 {daysOfWeek[docSlots[slotIndex][0].dateTime.getDay()]}, {docSlots[slotIndex][0].dateTime.getDate()} {docSlots[slotIndex][0].dateTime.toLocaleString('default', { month: 'short' })} {docSlots[slotIndex][0].dateTime.getFullYear()}</span>
+                    <span className='bg-white/20 px-2.5 py-0.5 rounded-full text-white font-extrabold'>⏰ {slotTime}</span>
+                  </p>
+                </div>
+
+                <div className='text-left sm:text-right shrink-0 bg-white/10 p-3 px-4 rounded-2xl border border-white/20 backdrop-blur-md'>
+                  <p className='text-[10px] font-extrabold text-indigo-200 uppercase tracking-wider'>Total Fee</p>
+                  <p className='text-2xl font-black text-white'>{currencySymbol}{docInfo.fees}</p>
+                </div>
+              </div>
+
+              <button 
+                type="button"
+                onClick={bookAppointment} 
+                className='w-full bg-white hover:bg-indigo-50 text-indigo-700 text-sm sm:text-base font-black py-4 px-8 rounded-2xl shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider flex items-center justify-center gap-2'
+              >
+                <span>⚡ Confirm & Reserve Appointment</span>
+                <span className='bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-bold'>{currencySymbol}{docInfo.fees}</span>
+              </button>
+            </div>
+          )}
+
+        </div>
 
       {/* --------- Listing Related Doctors ------------ */}
       <RelatedDoctors docId={docId} speciality={docInfo.speciality} />

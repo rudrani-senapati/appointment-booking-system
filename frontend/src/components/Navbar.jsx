@@ -9,20 +9,6 @@ const Navbar = () => {
   const navigate = useNavigate()
   const { token, setToken, userData } = useContext(AppContext)
   const [showMenu, setShowMenu] = useState(false)
-  const [visible, setVisible] = useState(true)
-  const [prevScrollPos, setPrevScrollPos] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.scrollY
-      // Hide navbar when scrolling down past 50px, show when scrolling up
-      setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 50)
-      setPrevScrollPos(currentScrollPos)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [prevScrollPos])
 
   const logout = () => {
     setToken(false)
@@ -31,76 +17,85 @@ const Navbar = () => {
     navigate('/login')
   }
 
-  // Lock body scrolling when mobile menu drawer is active
+  // Lock body & html scrolling + touch gestures when mobile menu drawer is active
   useEffect(() => {
     if (showMenu) {
       document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
+      document.body.style.touchAction = 'none'
     } else {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+      document.body.style.touchAction = ''
     }
     return () => {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+      document.body.style.touchAction = ''
     }
   }, [showMenu])
 
   return (
-    <nav className={`w-full sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-slate-200/80 shadow-sm transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between'>
+    <nav className='w-full sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-md shadow-slate-100/50'>
+      {/* Top Colorful Accent Line */}
+      <div className='h-1 w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600'></div>
+
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between'>
         
         {/* Brand Logo & Name */}
-        <div className='flex items-center gap-3 cursor-pointer group' onClick={() => navigate('/')}>
-          <div className='w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform duration-300'>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className='flex items-center gap-2.5 sm:gap-3 cursor-pointer group' onClick={() => { setShowMenu(false); navigate('/'); }}>
+          <div className='w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-all duration-300 shrink-0'>
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
           <div className='flex flex-col'>
-            <span className='text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none group-hover:text-indigo-600 transition-colors'>
-              Care<span className='text-indigo-600'>Pulse</span>
+            <span className='text-lg sm:text-2xl font-black tracking-tight text-slate-900 leading-none group-hover:text-indigo-600 transition-colors'>
+              Care<span className='text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600'>Pulse</span>
             </span>
-            <span className='text-[9px] font-bold uppercase tracking-widest text-slate-400 leading-tight'>Medical Care</span>
+            <span className='text-[8px] sm:text-[9.5px] font-extrabold uppercase tracking-widest text-slate-400 leading-tight mt-0.5'>Medical Care Network</span>
           </div>
         </div>
 
         {/* ------------ Desktop Nav Links ------------ */}
-        <ul className='hidden md:flex items-center gap-2 bg-slate-100/70 p-1.5 rounded-full border border-slate-200/60 shadow-inner text-xs font-semibold'>
+        <ul className='hidden md:flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 shadow-inner text-xs font-black'>
           <NavLink 
             to='/' 
-            className={({ isActive }) => `px-5 py-2 rounded-full transition-all duration-300 ${isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-600 hover:text-indigo-600 hover:bg-white/80'}`}
+            className={({ isActive }) => `px-5 py-2.5 rounded-full transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-md shadow-indigo-300' : 'text-slate-600 hover:text-indigo-600 hover:bg-white'}`}
           >
             HOME
           </NavLink>
           <NavLink 
             to='/doctors' 
-            className={({ isActive }) => `px-5 py-2 rounded-full transition-all duration-300 ${isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-600 hover:text-indigo-600 hover:bg-white/80'}`}
+            className={({ isActive }) => `px-5 py-2.5 rounded-full transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-md shadow-indigo-300' : 'text-slate-600 hover:text-indigo-600 hover:bg-white'}`}
           >
             ALL DOCTORS
           </NavLink>
           <NavLink 
             to='/about' 
-            className={({ isActive }) => `px-5 py-2 rounded-full transition-all duration-300 ${isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-600 hover:text-indigo-600 hover:bg-white/80'}`}
+            className={({ isActive }) => `px-5 py-2.5 rounded-full transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-md shadow-indigo-300' : 'text-slate-600 hover:text-indigo-600 hover:bg-white'}`}
           >
             ABOUT
           </NavLink>
           <NavLink 
             to='/contact' 
-            className={({ isActive }) => `px-5 py-2 rounded-full transition-all duration-300 ${isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-600 hover:text-indigo-600 hover:bg-white/80'}`}
+            className={({ isActive }) => `px-5 py-2.5 rounded-full transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-md shadow-indigo-300' : 'text-slate-600 hover:text-indigo-600 hover:bg-white'}`}
           >
             CONTACT
           </NavLink>
           <NavLink 
             to='/careers' 
-            className={({ isActive }) => `px-5 py-2 rounded-full transition-all duration-300 ${isActive ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-600 hover:text-indigo-600 hover:bg-white/80'}`}
+            className={({ isActive }) => `px-5 py-2.5 rounded-full transition-all duration-300 ${isActive ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-md shadow-indigo-300' : 'text-slate-600 hover:text-indigo-600 hover:bg-white'}`}
           >
             CAREERS
           </NavLink>
         </ul>
 
-        {/* ------------ Right Side User / Auth Button ------------ */}
-        <div className='flex items-center gap-4'>
+        {/* ------------ Right Side User / Auth Button & Mobile Toggle ------------ */}
+        <div className='flex items-center gap-3 sm:gap-4'>
           {token && userData ? (
-            <div className='flex items-center gap-2.5 cursor-pointer group relative bg-indigo-50/50 hover:bg-indigo-50 border border-indigo-100/80 p-1.5 pr-3 rounded-full transition-all'>
-              <img className='w-8 h-8 rounded-full object-cover ring-2 ring-indigo-500/40' src={userData.image} alt="User Avatar" />
+            <div className='flex items-center gap-2 cursor-pointer group relative bg-indigo-50/50 hover:bg-indigo-50 border border-indigo-100/80 p-1 sm:p-1.5 pr-2 sm:pr-3 rounded-full transition-all'>
+              <img className='w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-indigo-500/40' src={userData.image} alt="User Avatar" />
               <span className='hidden sm:block text-xs font-bold text-slate-800 max-w-28 truncate'>{userData.name}</span>
               <img className='w-2.5 transition-transform group-hover:rotate-180 opacity-70' src={assets.dropdown_icon} alt="" />
               
@@ -117,6 +112,9 @@ const Navbar = () => {
                   <p onClick={() => navigate('my-appointments')} className='hover:text-indigo-600 hover:bg-indigo-50/80 p-2.5 rounded-xl cursor-pointer transition-colors font-semibold flex items-center gap-2'>
                     <span>📅</span> My Appointments
                   </p>
+                  <p onClick={() => navigate('my-records')} className='hover:text-indigo-600 hover:bg-indigo-50/80 p-2.5 rounded-xl cursor-pointer transition-colors font-semibold flex items-center gap-2'>
+                    <span>📂</span> Health Vault & Rx
+                  </p>
                   <hr className='border-slate-100 my-1' />
                   <p onClick={logout} className='hover:text-rose-600 hover:bg-rose-50/80 p-2.5 rounded-xl cursor-pointer transition-colors font-semibold flex items-center gap-2'>
                     <span>🚪</span> Logout
@@ -130,30 +128,37 @@ const Navbar = () => {
             </button>
           )}
 
-          {/* Mobile Hamburger Toggle Button */}
+          {/* High-Contrast Mobile Hamburger Toggle Button */}
           <button 
             type="button"
             onClick={() => setShowMenu(prev => !prev)} 
             aria-label="Toggle Navigation Menu"
-            className='md:hidden p-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 focus:outline-none transition-colors cursor-pointer border border-indigo-200 shadow-sm z-50 flex items-center justify-center'
+            className='md:hidden px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs shadow-md shadow-indigo-200 focus:outline-none transition-all cursor-pointer border border-indigo-500 z-[100] flex items-center gap-1.5'
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {showMenu ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
               ) : (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
+            <span className='font-black uppercase tracking-wider text-[11px]'>{showMenu ? 'Close' : 'Menu'}</span>
           </button>
 
           {/* ---------- Mobile Menu Portal Attached Directly to document.body ----------------------- */}
           {createPortal(
-            <div className={`fixed inset-0 top-0 left-0 w-full h-full bg-slate-900/60 backdrop-blur-sm z-[999999] transition-opacity duration-300 md:hidden ${showMenu ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+            <div 
+              className={`fixed inset-0 top-0 left-0 w-full h-full bg-slate-900/60 backdrop-blur-sm z-[999999] transition-opacity duration-300 md:hidden ${showMenu ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+              onTouchMove={(e) => { e.preventDefault(); }}
+            >
               {/* Clickable Backdrop Outside Side Drawer */}
-              <div className='absolute inset-0' onClick={() => setShowMenu(false)} />
+              <div className='absolute inset-0 touch-none' onClick={() => setShowMenu(false)} />
 
               {/* Solid Opaque 100% White Side Drawer Content Panel */}
-              <div className={`absolute top-0 right-0 w-full max-w-xs sm:max-w-sm h-full bg-white shadow-2xl z-[1000000] flex flex-col justify-between p-6 transition-transform duration-300 overflow-y-auto ${showMenu ? 'translate-x-0' : 'translate-x-full'}`}>
+              <div 
+                className={`absolute top-0 right-0 w-full max-w-xs sm:max-w-sm h-full bg-white shadow-2xl z-[1000000] flex flex-col justify-between p-6 transition-transform duration-300 overflow-y-auto overscroll-contain touch-pan-y ${showMenu ? 'translate-x-0' : 'translate-x-full'}`}
+                onTouchMove={(e) => { e.stopPropagation(); }}
+              >
                 <div>
                   {/* Drawer Header */}
                   <div className='flex items-center justify-between pb-5 border-b border-slate-100'>

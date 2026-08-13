@@ -6,6 +6,8 @@ import { v2 as cloudinary } from 'cloudinary'
 import doctorModel from '../models/doctorModel.js'
 import appointmentModel from '../models/appointmentModel.js'
 import razorpay from 'razorpay'
+import { sendAppointmentEmail } from '../config/email.js'
+import { sendSMSNotification } from '../config/sms.js'
 
 
 // API to register user
@@ -201,6 +203,26 @@ const bookAppointment = async (req, res) => {
 
         // save new slots data in docData
         await doctorModel.findByIdAndUpdate(docId, { slots_booked })
+
+        // Trigger non-blocking Email & Twilio SMS notification to patient
+        if (userData.email) {
+            sendAppointmentEmail({
+                toEmail: userData.email,
+                patientName: userData.name,
+                doctorName: docData.name,
+                speciality: docData.speciality,
+                slotDate: slotDate,
+                slotTime: slotTime,
+                amount: docData.fees,
+                consultationType: type,
+                meetingLink: meetingLink
+            }).catch(err => console.error("Email dispatch failed silently:", err));
+        }
+
+        // Trigger SMS Notification
+        const phone = userData.phone || '+917437886255';
+        const smsMsg = `🏥 CarePulse Confirmation: Your appointment with Dr. ${docData.name} (${docData.speciality}) is confirmed for ${slotDate} at ${slotTime}. Type: ${type}.`;
+        sendSMSNotification(phone, smsMsg).catch(err => console.error("SMS dispatch failed silently:", err));
 
         res.json({ success: true, message: `Appointment Booked (${type})` })
 

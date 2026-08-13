@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
@@ -10,6 +10,18 @@ const AdminContextProvider = (props) => {
     const [doctors, setDoctors] = useState([])
     const [appointments, setAppointments] = useState([])
     const [dashData,setDashData] = useState(false)
+    const [adminProfile, setAdminProfile] = useState(() => {
+        const saved = localStorage.getItem('adminProfile')
+        return saved ? JSON.parse(saved) : {
+            name: 'System Administrator',
+            email: 'admin@carepulse.com',
+            role: 'Super Administrator',
+            phone: '+91 98765 43210',
+            address: { line1: 'CarePulse HQ, Tech Tower 4', line2: 'Healthcare District, Mumbai 400001' },
+            permissions: ['Full System Access', 'Doctor Onboarding', 'Appointments Management', 'Hiring Operations'],
+            image: ''
+        }
+    })
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -93,6 +105,12 @@ const AdminContextProvider = (props) => {
         }
     }
 
+    const updateAdminProfileData = (updatedData) => {
+        setAdminProfile(updatedData)
+        localStorage.setItem('adminProfile', JSON.stringify(updatedData))
+        toast.success('🛡️ Admin profile updated successfully!')
+    }
+
     const value = {
         aToken, setAToken,
         backendUrl, doctors,
@@ -100,8 +118,26 @@ const AdminContextProvider = (props) => {
         appointments, setAppointments,
         getAllAppointments,
         cancelAppointment,
-        dashData,getDashData
+        dashData,getDashData,
+        adminProfile, setAdminProfile, updateAdminProfileData
     }
+
+    // Auto-polling for Admin context so data updates live
+    useEffect(() => {
+        if (aToken) {
+            getAllDoctors()
+            getAllAppointments()
+            getDashData()
+
+            const interval = setInterval(() => {
+                getAllDoctors()
+                getAllAppointments()
+                getDashData()
+            }, 10000)
+
+            return () => clearInterval(interval)
+        }
+    }, [aToken])
     return (
         <AdminContext.Provider value={value}>
             {props.children}

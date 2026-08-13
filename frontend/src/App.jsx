@@ -11,10 +11,11 @@ import Careers from './pages/Careers'
 import Appointment from './pages/Appointment'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import ScrollToTop from './components/ScrollToTop'
+import { ScrollToTop, LiveChatWidget } from './components/ScrollToTop'
 import { AppContext } from './context/AppContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import MyRecords from './pages/MyRecords'
 
 // Protected Route Guard Component
 const ProtectedRoute = ({ children }) => {
@@ -31,7 +32,7 @@ const App = () => {
   const { token } = useContext(AppContext)
 
   return (
-    <div className='w-full max-w-full min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white bg-[#eef2f6]/90 overflow-x-hidden'>
+    <div className='w-full max-w-full min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white bg-[#eef2f6]/90 overflow-x-hidden relative'>
       <div className='w-full max-w-full overflow-x-hidden'>
         <ScrollToTop />
         <ToastContainer position="top-right" autoClose={3000} />
@@ -49,12 +50,14 @@ const App = () => {
             <Route path='/contact' element={<ProtectedRoute><Contact /></ProtectedRoute>} />
             <Route path='/careers' element={<ProtectedRoute><Careers /></ProtectedRoute>} />
             <Route path='/my-appointments' element={<ProtectedRoute><MyAppointments /></ProtectedRoute>} />
+            <Route path='/my-records' element={<ProtectedRoute><MyRecords /></ProtectedRoute>} />
             <Route path='/my-profile' element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
             <Route path='/appointment/:docId' element={<ProtectedRoute><Appointment /></ProtectedRoute>} />
             <Route path='*' element={<Navigate to={token ? "/" : "/login"} replace />} />
           </Routes>
         </main>
       </div>
+      {token && <LiveChatWidget />}
       {token && <Footer />}
     </div>
   )

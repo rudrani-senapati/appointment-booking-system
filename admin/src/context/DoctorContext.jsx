@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from 'axios'
 import {toast} from 'react-toastify'
 
@@ -33,9 +33,13 @@ const DoctorContextProvider = (props) => {
         }
     }
 
-    const completeAppointment = async (appointmentId) => {
+    const completeAppointment = async (appointmentId, prescription = null, meetingLink = '') => {
         try {
-            const {data} = await axios.post(backendUrl + '/api/doctor/complete-appointment',{appointmentId}, {headers:{dToken}})
+            const {data} = await axios.post(
+                backendUrl + '/api/doctor/complete-appointment',
+                { appointmentId, prescription, meetingLink },
+                { headers: { dToken } }
+            )
             if (data.success) {
                 toast.success(data.message)
                 getAppointments()
@@ -105,6 +109,22 @@ const DoctorContextProvider = (props) => {
         profileData,setProfileData,
         getProfileData,
     }
+
+    // Auto-polling for Doctor context so data updates live
+    useEffect(() => {
+        if (dToken) {
+            getAppointments()
+            getDashData()
+            getProfileData()
+
+            const interval = setInterval(() => {
+                getAppointments()
+                getDashData()
+            }, 10000)
+
+            return () => clearInterval(interval)
+        }
+    }, [dToken])
     return (
         <DoctorContext.Provider value={value}>
             {props.children}

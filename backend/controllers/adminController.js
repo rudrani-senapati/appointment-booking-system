@@ -1,179 +1,221 @@
-import validator from "validator"
-import bycrypt from 'bcrypt'
-import { v2 as cloudinary } from "cloudinary"
-import doctorModel from "../models/doctorModel.js"
-import jwt from 'jsonwebtoken'
-import appointmentModel from "../models/appointmentModel.js"
-import userModel from "../models/userModel.js"
+import validator   from 'validator'
+import bcrypt      from 'bcrypt'
+import { v2 as cloudinary } from 'cloudinary'
+import jwt         from 'jsonwebtoken'
 
+import doctorModel      from '../models/doctorModel.js'
+import appointmentModel from '../models/appointmentModel.js'
+import userModel        from '../models/userModel.js'
+import departmentModel  from '../models/departmentModel.js'
 
+// ── Default departments matching the speciality options in AddDoctor ──────────
+const DEFAULT_DEPARTMENTS = [
+  { name: 'General Physician',   icon: '🩺', description: 'Primary care and general medicine' },
+  { name: 'Gynecologist',        icon: '🤰', description: "Women's health and obstetrics" },
+  { name: 'Dentist',             icon: '🪥', description: 'Oral health and dental care' },
+  { name: 'Dermatologist',       icon: '🧴', description: 'Skin, hair and nail conditions' },
+  { name: 'Pediatricians',       icon: '🧸', description: 'Child healthcare from birth to adolescence' },
+  { name: 'Neurologist',         icon: '🧠', description: 'Brain and nervous system disorders' },
+  { name: 'Gastroenterologist',  icon: '🥗', description: 'Digestive system and gut health' },
+  { name: 'Ophthalmologist',     icon: '👁️', description: 'Eye care and vision disorders' },
+  { name: 'Orthopedic',          icon: '🦴', description: 'Bones, joints and musculoskeletal system' },
+  { name: 'Cardiologist',        icon: '❤️', description: 'Heart and cardiovascular health' },
+  { name: 'Pulmonologist',       icon: '🫁', description: 'Lung and respiratory conditions' },
+  { name: 'ENT Specialist',      icon: '👂', description: 'Ear, nose and throat disorders' },
+]
 
-// API for adding doctor
+// ─────────────────────────────────────────────────────────────────────────────
+// Add Doctor
+// ─────────────────────────────────────────────────────────────────────────────
 const addDoctor = async (req, res) => {
-    try {
+  try {
+    const { name, email, password, speciality, degree, experience, about, fees, address } = req.body
+    const imageFile = req.file
 
-        const { name, email, password, speciality, degree, experience, about, fees, address } = req.body
-        const imageFile = req.file
-
-
-        // checking for all data to add doctor
-
-        if (!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address) {
-            return res.json({ success: false, message: "Missing Details" })
-        }
-
-        // validating email format
-        if (!validator.isEmail(email)) {
-            return res.json({ success: false, message: "Please enter a valid email" })
-        }
-
-        // validating strong password
-        if (password.length < 8) {
-            return res.json({ success: false, message: "Please enter a strong password" })
-        }
-
-        // hashing doctor password
-        const salt = await bycrypt.genSalt(10)
-        const hashedPassword = await bycrypt.hash(password, salt)
-
-
-        // upload image to cloudinary
-        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
-        const imageUrl = imageUpload.secure_url
-
-        const doctorData = {
-            name,
-            email,
-            image: imageUrl,
-            password: hashedPassword,
-            speciality,
-            degree,
-            experience,
-            about,
-            fees,
-            address: JSON.parse(address),
-            date: Date.now()
-        }
-
-
-        const newDoctor = new doctorModel(doctorData)
-        await newDoctor.save()
-
-        res.json({ success: true, message: "Doctor Added" })
-    } catch (error) {
-        console.log(error);
-        console.log("Cloudinary connection failed!");
-
-    console.log("Message:", error.message);
-    console.log("HTTP Code:", error.http_code);
-    console.log("Error:", error.error);
-    console.log(error);
-        res.json({ success: false, message: error.message })
-
+    if (!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address) {
+      return res.json({ success: false, message: 'Missing required details' })
     }
+    if (!validator.isEmail(email)) {
+      return res.json({ success: false, message: 'Please enter a valid email' })
+    }
+    if (password.length < 8) {
+      return res.json({ success: false, message: 'Password must be at least 8 characters' })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt(10))
+    const imageUpload    = await cloudinary.uploader.upload(imageFile.path, { resource_type: 'image' })
+
+    const newDoctor = new doctorModel({
+      name, email,
+      image:     imageUpload.secure_url,
+      password:  hashedPassword,
+      speciality, degree, experience, about, fees,
+      address:   JSON.parse(address),
+      date:      Date.now(),
+    })
+
+    await newDoctor.save()
+    res.json({ success: true, message: 'Doctor added successfully' })
+  } catch (error) {
+    console.error('addDoctor error:', error.message)
+    res.json({ success: false, message: error.message })
+  }
 }
 
-// API For admin Login
-
+// ─────────────────────────────────────────────────────────────────────────────
+// Admin Login
+// ─────────────────────────────────────────────────────────────────────────────
 const loginAdmin = async (req, res) => {
-    try {
-
-
-        const { email, password } = req.body
-        if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-
-            const token = jwt.sign(email + password, process.env.JWT_SECRET)
-            res.json({ success: true, token })
-
-        } else {
-            res.json({ success: false, message: "Invalid credentials" })
-        }
-
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message })
-
+  try {
+    const { email, password } = req.body
+    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+      const token = jwt.sign(email + password, process.env.JWT_SECRET)
+      return res.json({ success: true, token })
     }
+    res.json({ success: false, message: 'Invalid credentials' })
+  } catch (error) {
+    console.error('loginAdmin error:', error.message)
+    res.json({ success: false, message: error.message })
+  }
 }
 
-// API to get all doctors list for admin panel
-
+// ─────────────────────────────────────────────────────────────────────────────
+// All Doctors
+// ─────────────────────────────────────────────────────────────────────────────
 const allDoctors = async (req, res) => {
-    try {
-        const doctors = await doctorModel.find({}).select('-password')
-        res.json({ success: true, doctors })
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message })
-    }
+  try {
+    const doctors = await doctorModel.find({}).select('-password')
+    res.json({ success: true, doctors })
+  } catch (error) {
+    console.error('allDoctors error:', error.message)
+    res.json({ success: false, message: error.message })
+  }
 }
 
-// Api to get all appointments list
+// ─────────────────────────────────────────────────────────────────────────────
+// All Appointments
+// ─────────────────────────────────────────────────────────────────────────────
 const appointmentsAdmin = async (req, res) => {
-    try {
-        const appointments = await appointmentModel.find({})
-        res.json({ success: true, appointments })
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message })
-    }
+  try {
+    const appointments = await appointmentModel.find({})
+    res.json({ success: true, appointments })
+  } catch (error) {
+    console.error('appointmentsAdmin error:', error.message)
+    res.json({ success: false, message: error.message })
+  }
 }
 
-
-// API for appointment cancellation
-
+// ─────────────────────────────────────────────────────────────────────────────
+// Cancel Appointment
+// ─────────────────────────────────────────────────────────────────────────────
 const appointmentCancel = async (req, res) => {
+  try {
+    const { appointmentId } = req.body
+    const appointment = await appointmentModel.findById(appointmentId)
+    if (!appointment) return res.json({ success: false, message: 'Appointment not found' })
 
-    try {
+    await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
 
-        const { appointmentId } = req.body
+    const { docId, slotDate, slotTime } = appointment
+    const doctor       = await doctorModel.findById(docId)
+    const slots_booked = { ...doctor.slots_booked }
+    slots_booked[slotDate] = (slots_booked[slotDate] || []).filter(t => t !== slotTime)
+    await doctorModel.findByIdAndUpdate(docId, { slots_booked })
 
-        const appointmentData = await appointmentModel.findById(appointmentId)
-
-        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
-
-        // releasing doctor slot
-
-        const { docId, slotDate, slotTime } = appointmentData
-
-        const doctorData = await doctorModel.findById(docId)
-
-        let slots_booked = doctorData.slots_booked
-
-        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
-
-        await doctorModel.findByIdAndUpdate(docId, { slots_booked })
-
-        res.json({ success: true, message: 'Appointment Cancelled' })
-
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message })
-    }
-
+    res.json({ success: true, message: 'Appointment cancelled' })
+  } catch (error) {
+    console.error('appointmentCancel error:', error.message)
+    res.json({ success: false, message: error.message })
+  }
 }
 
-// Api to get dashboard for admin panel
-const adminDashboard = async (req,res) => {
-    try {
-        
-        const doctors = await doctorModel.find({})
-        const users = await userModel.find({})
-        const appointments = await appointmentModel.find({})
+// ─────────────────────────────────────────────────────────────────────────────
+// Admin Dashboard
+// ─────────────────────────────────────────────────────────────────────────────
+const adminDashboard = async (req, res) => {
+  try {
+    const [doctors, users, appointments] = await Promise.all([
+      doctorModel.find({}),
+      userModel.find({}),
+      appointmentModel.find({}),
+    ])
 
-        const dashData = {
-            doctors: doctors.length,
-            appointments:appointments.length,
-            patients:users.length,
-            latestAppointments: appointments.reverse().slice(0,5)
-        }
-
-        res.json({success:true,dashData})
-
-    } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message })
-    }
+    res.json({
+      success: true,
+      dashData: {
+        doctors:            doctors.length,
+        appointments:       appointments.length,
+        patients:           users.length,
+        latestAppointments: [...appointments].reverse().slice(0, 5),
+      },
+    })
+  } catch (error) {
+    console.error('adminDashboard error:', error.message)
+    res.json({ success: false, message: error.message })
+  }
 }
 
-export { addDoctor, loginAdmin, allDoctors, appointmentsAdmin, appointmentCancel, adminDashboard }
+// ─────────────────────────────────────────────────────────────────────────────
+// Get Departments  (auto-seeds the 12 defaults on first call)
+// ─────────────────────────────────────────────────────────────────────────────
+const getDepartments = async (req, res) => {
+  try {
+    let departments = await departmentModel.find({ isActive: true }).sort({ createdAt: 1 })
+
+    // Seed defaults when collection is empty
+    if (departments.length === 0) {
+      await departmentModel.insertMany(DEFAULT_DEPARTMENTS)
+      departments = await departmentModel.find({ isActive: true }).sort({ createdAt: 1 })
+    }
+
+    // Attach live doctor count per department (case-insensitive match)
+    const doctors = await doctorModel.find({}).select('speciality name')
+
+    const enriched = departments.map(dept => {
+      const matched = doctors.filter(
+        d => d.speciality.toLowerCase() === dept.name.toLowerCase()
+      )
+      return { ...dept.toObject(), doctorCount: matched.length, doctors: matched.map(d => d.name) }
+    })
+
+    res.json({ success: true, departments: enriched })
+  } catch (error) {
+    console.error('getDepartments error:', error.message)
+    res.json({ success: false, message: error.message })
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Add Department
+// ─────────────────────────────────────────────────────────────────────────────
+const addDepartment = async (req, res) => {
+  try {
+    const { name, icon = '🏥', description = '', headDoctor = '' } = req.body
+
+    if (!name || !name.trim()) {
+      return res.json({ success: false, message: 'Department name is required' })
+    }
+
+    const existing = await departmentModel.findOne({ name: name.trim() })
+    if (existing) return res.json({ success: false, message: 'Department already exists' })
+
+    const department = new departmentModel({ name: name.trim(), icon, description, headDoctor })
+    await department.save()
+
+    res.json({ success: true, message: `Department "${name.trim()}" created`, department })
+  } catch (error) {
+    console.error('addDepartment error:', error.message)
+    res.json({ success: false, message: error.message })
+  }
+}
+
+export {
+  addDoctor,
+  loginAdmin,
+  allDoctors,
+  appointmentsAdmin,
+  appointmentCancel,
+  adminDashboard,
+  getDepartments,
+  addDepartment,
+}

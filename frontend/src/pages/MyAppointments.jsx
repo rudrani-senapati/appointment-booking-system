@@ -70,6 +70,13 @@ const MyAppointments = () => {
   const [selectedPrescription, setSelectedPrescription] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
 
+  // Pagination state (5 appointments per page)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 5
+
+  const totalPages = Math.ceil(appointments.length / itemsPerPage) || 1
+  const paginatedAppointments = appointments.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+
   const monts = [" ", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
   const navigate = useNavigate()
@@ -227,8 +234,8 @@ const MyAppointments = () => {
 
       {/* Appointments List */}
       <div className='flex flex-col gap-4 sm:gap-5'>
-        {appointments.length > 0 ? (
-          appointments.map((item, index) => {
+        {paginatedAppointments.length > 0 ? (
+          paginatedAppointments.map((item, index) => {
             const isOnline = item.consultationType === 'Online Consultation' || 
                              (item.consultationType && item.consultationType.toLowerCase().includes('online')) ||
                              (item.meetingLink && item.meetingLink.length > 0)
@@ -241,6 +248,7 @@ const MyAppointments = () => {
 
             return (
               <div 
+                key={index}
                 className={`bg-white border-2 rounded-3xl p-4 sm:p-6 shadow-xl transition-all flex flex-col lg:flex-row gap-5 lg:gap-6 items-start lg:items-center justify-between ${
                   item.isCompleted 
                     ? 'border-emerald-300 bg-emerald-50/20' 
@@ -248,102 +256,94 @@ const MyAppointments = () => {
                     ? 'border-rose-200 bg-rose-50/10' 
                     : 'border-indigo-200/90 shadow-slate-300/50 hover:border-indigo-500'
                 }`} 
-                key={index}
               >
-                <div className='flex flex-col sm:flex-row gap-4 sm:gap-5 items-start sm:items-center flex-1 w-full'>
+                {/* Doctor Photo & Details */}
+                <div className='flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 flex-1 min-w-0 w-full'>
                   <img 
-                    className='w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-indigo-50 object-cover ring-4 ring-indigo-500/10 shrink-0 self-center sm:self-start' 
+                    className='w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover object-top border-2 border-indigo-100 bg-indigo-50 shadow-md shrink-0' 
                     src={item.docData.image} 
                     alt={item.docData.name} 
                   />
-                  <div className='flex flex-col gap-1.5 text-xs sm:text-sm text-slate-700 w-full'>
+
+                  <div className='space-y-1 flex-1 min-w-0 w-full'>
                     <div className='flex flex-wrap items-center gap-2'>
-                      <h2 className='text-slate-900 font-black text-lg sm:text-xl tracking-tight'>{item.docData.name}</h2>
-                      <span className='text-[10px] font-extrabold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200 uppercase tracking-wider'>
+                      <h2 className='text-slate-900 font-extrabold text-base sm:text-lg tracking-tight truncate'>
+                        {item.docData.name}
+                      </h2>
+                      <span className='px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-black text-[10px] uppercase border border-indigo-200'>
                         {item.docData.speciality}
                       </span>
-                      <span className={`text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider border ${isOnline ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-slate-100 text-slate-700 border-slate-200'}`}>
-                        {isOnline ? '💻 Online Telehealth Call' : '🏥 In-Clinic Visit'}
-                      </span>
-                      {item.isCompleted && (
-                        <span className='text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1'>
-                          ✓ Consultation Completed
+                    </div>
+
+                    <p className='text-slate-500 font-medium text-xs'>
+                      {item.docData.degree} • {item.docData.experience} Experience
+                    </p>
+
+                    <div className='pt-1 space-y-1'>
+                      <p className='text-xs font-bold text-slate-700 flex flex-wrap items-center gap-2'>
+                        <span className='bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg border border-indigo-100'>
+                          📅 {slotDateFormat(item.slotDate)}
                         </span>
-                      )}
-                    </div>
-                    
-                    <div className='text-slate-500 text-xs font-medium space-y-0.5 mt-1'>
-                      <p className='text-slate-800 font-bold'>Clinic Address:</p>
-                      <p>{item.docData.address.line1}, {item.docData.address.line2}</p>
+                        <span className='bg-purple-50 text-purple-700 px-2.5 py-1 rounded-lg border border-purple-100'>
+                          ⏰ {item.slotTime}
+                        </span>
+                      </p>
+
+                      <p className='text-xs text-slate-500 font-semibold flex items-center gap-1.5 pt-0.5'>
+                        <span>{isOnline ? '💻' : '🏥'}</span>
+                        <span>{isOnline ? 'Online Tele-Consultation (HD Video)' : `In-Clinic: ${item.docData.address.line1}`}</span>
+                      </p>
                     </div>
 
-                    <div className='flex flex-wrap items-center gap-2.5 sm:gap-4 text-xs font-extrabold text-slate-800 mt-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 w-full sm:w-auto max-w-full'>
-                      <span>📅 Date: {slotDateFormat(item.slotDate)}</span>
-                      <span className='text-indigo-600'>⏰ Time: {item.slotTime}</span>
-                      <span className='text-slate-500'>💳 Fee: ₹{item.amount}</span>
-                    </div>
-
-                    {/* Live Payment Deadline Countdown Timer */}
+                    {/* Payment Timer Component */}
                     <PaymentCountdownTimer item={item} />
                   </div>
                 </div>
 
-                {/* Right Action Controls */}
-                <div className='flex flex-col gap-2.5 w-full lg:w-64 shrink-0 border-t lg:border-t-0 border-slate-100 pt-4 lg:pt-0'>
-                  
-                  {/* Live Telehealth Video Call Button (Requires Payment First) */}
-                  {!item.cancelled && !item.isCompleted && isOnline && !isPaymentExpired && (
+                {/* Status Badges & Action Buttons */}
+                <div className='flex flex-col gap-2.5 w-full lg:w-48 shrink-0 border-t lg:border-t-0 border-slate-100 pt-3 lg:pt-0'>
+                  {item.payment && !item.isCompleted && !item.cancelled && (
+                    <span className='w-full text-center py-2 px-3 rounded-2xl font-extrabold text-xs text-emerald-700 bg-emerald-50 border border-emerald-300 flex items-center justify-center gap-1 shadow-xs'>
+                      <span>✓</span> Paid & Confirmed
+                    </span>
+                  )}
+
+                  {isOnline && !item.isCompleted && !item.cancelled && (
                     <button 
                       onClick={() => handleJoinRoom(item)}
-                      className={`w-full py-3 px-5 rounded-2xl font-extrabold text-xs text-white transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wider ${
+                      className={`w-full py-3 px-4 rounded-2xl font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-md flex items-center justify-center gap-2 cursor-pointer ${
                         item.payment 
-                          ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-md shadow-emerald-200' 
-                          : 'bg-slate-700 hover:bg-slate-800 shadow-md'
+                          ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-emerald-200 hover:scale-[1.02]' 
+                          : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-indigo-200'
                       }`}
                     >
-                      {item.payment ? '🎥 Join Telehealth Video Call' : '🔒 Pay Fee to Unlock Call'}
+                      <span>📹</span>
+                      <span>{item.payment ? 'Join Video Room' : 'Unlock Video Room'}</span>
                     </button>
                   )}
 
-                  {/* Digital Prescription & Medicine Button */}
-                  {!item.cancelled && (
-                    <button 
-                      onClick={() => setSelectedPrescription(item)}
-                      className='w-full py-2.5 px-5 rounded-2xl font-extrabold text-xs text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 transition-all cursor-pointer flex items-center justify-center gap-2 uppercase tracking-wider'
-                    >
-                      📋 Digital Prescription & Medicines
-                    </button>
-                  )}
-
-                  {!item.cancelled && item.payment && !item.isCompleted && (
-                    <button className='w-full py-2.5 px-5 rounded-2xl font-extrabold text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 cursor-default flex items-center justify-center gap-1.5'>
-                      <span>✓</span> Paid Online
-                    </button>
-                  )}
-
-                  {!item.cancelled && !item.payment && !item.isCompleted && !isPaymentExpired && (
+                  {!item.payment && !item.cancelled && !item.isCompleted && !isPaymentExpired && (
                     <button 
                       onClick={() => appointmentRazorpay(item)} 
-                      className='w-full py-2.5 px-5 rounded-2xl font-extrabold text-xs text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-100 transition-all transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider'
+                      className='w-full py-3 px-4 rounded-2xl font-black text-xs uppercase tracking-wider bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-md shadow-indigo-200 transition-all cursor-pointer flex items-center justify-center gap-1.5'
                     >
-                      💳 Pay Fee Online
+                      <span>💳</span> Pay Online (₹{item.docData.fees})
                     </button>
                   )}
 
-                  {/* Expired Payment Window State */}
-                  {!item.cancelled && !item.payment && isPaymentExpired && (
+                  {item.prescription && (
                     <button 
-                      onClick={() => navigate('/doctors')} 
-                      className='w-full py-2.5 px-5 rounded-2xl font-extrabold text-xs text-rose-700 bg-rose-50 border-2 border-rose-300 hover:bg-rose-100 transition-all cursor-pointer flex items-center justify-center gap-1.5 uppercase tracking-wider'
+                      onClick={() => setSelectedPrescription(item)}
+                      className='w-full py-2.5 px-4 rounded-2xl font-extrabold text-xs text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-xs'
                     >
-                      🔄 Re-Book Doctor Slot
+                      <span>📜</span> View Digital Rx
                     </button>
                   )}
 
                   {!item.cancelled && !item.isCompleted && (
                     <button 
                       onClick={() => cancelAppointment(item._id)} 
-                      className='w-full py-2 px-5 rounded-2xl font-bold text-xs text-slate-500 bg-slate-50 hover:bg-rose-600 hover:text-white border border-slate-200 transition-all cursor-pointer'
+                      className='w-full py-2.5 px-4 rounded-2xl font-bold text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200/80 transition-all cursor-pointer text-center'
                     >
                       Cancel Appointment
                     </button>
@@ -382,6 +382,31 @@ const MyAppointments = () => {
           </div>
         )}
       </div>
+
+      {/* Clean Pagination Control Bar */}
+      {totalPages > 1 && (
+        <div className='flex items-center justify-between bg-white p-4 rounded-2xl border-2 border-indigo-200/80 shadow-md text-xs font-black'>
+          <button 
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            className='px-4 py-2 rounded-xl bg-slate-100 hover:bg-indigo-50 border border-slate-200 text-slate-700 hover:text-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer'
+          >
+            ← Previous Page
+          </button>
+          
+          <div className='flex items-center gap-2'>
+            <span>Page <span className='text-indigo-600 font-extrabold'>{currentPage}</span> of {totalPages}</span>
+          </div>
+
+          <button 
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            className='px-4 py-2 rounded-xl bg-slate-100 hover:bg-indigo-50 border border-slate-200 text-slate-700 hover:text-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer'
+          >
+            Next Page →
+          </button>
+        </div>
+      )}
 
       {/* Digital Prescription Modal */}
       {selectedPrescription && (

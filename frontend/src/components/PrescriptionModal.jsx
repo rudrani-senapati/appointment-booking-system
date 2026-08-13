@@ -15,16 +15,40 @@ const PrescriptionModal = ({ appointment, onClose }) => {
     }
   }, [])
 
-  const rx = appointment.prescription || {
-    rxId: 'CP-RX-849201',
+  // Safe parsing of doctor prescription (handles object, array or plain text)
+  const rawRx = appointment.prescription
+  let rx = {
+    rxId: `CP-RX-${appointment._id ? appointment._id.slice(-6).toUpperCase() : '849201'}`,
     issuedDate: new Date().toLocaleDateString(),
     diagnosis: `Medical Consultation (${appointment.docData.speciality})`,
-    notes: 'Rest well, drink 3 liters of water daily, avoid cold beverages. Re-consult if symptoms persist after 5 days.',
-    medicines: [
+    notes: 'Rest well, drink warm fluids, and follow up if symptoms persist.',
+    medicines: []
+  }
+
+  if (rawRx) {
+    if (typeof rawRx === 'object') {
+      rx.diagnosis = rawRx.diagnosis || rx.diagnosis
+      rx.notes = rawRx.notes || rx.notes
+      if (typeof rawRx.medicines === 'string') {
+        rx.medicines = rawRx.medicines.split('\n').filter(Boolean).map(m => ({
+          name: m,
+          dosage: 'As prescribed',
+          duration: 'As directed',
+          instructions: 'Take after meals'
+        }))
+      } else if (Array.isArray(rawRx.medicines)) {
+        rx.medicines = rawRx.medicines
+      }
+    } else if (typeof rawRx === 'string') {
+      rx.diagnosis = rawRx
+    }
+  }
+
+  if (rx.medicines.length === 0) {
+    rx.medicines = [
       { name: 'Amoxicillin Trihydrate 500mg', dosage: '1-0-1 (After Food)', duration: '5 Days', instructions: 'Take with warm water' },
       { name: 'Paracetamol 650mg (Dolo)', dosage: '1-0-1 (As Needed)', duration: '3 Days', instructions: 'Take for fever or body pain' },
-      { name: 'Cetirizine Hydrochloride 10mg', dosage: '0-0-1 (At Night)', duration: '5 Days', instructions: 'May cause mild drowsiness' },
-      { name: 'Vitamin C & Zinc Chewables', dosage: '1 Tablet Daily', duration: '10 Days', instructions: 'Chew thoroughly after breakfast' }
+      { name: 'Cetirizine Hydrochloride 10mg', dosage: '0-0-1 (At Night)', duration: '5 Days', instructions: 'May cause mild drowsiness' }
     ]
   }
 
@@ -181,7 +205,7 @@ const PrescriptionModal = ({ appointment, onClose }) => {
             onClick={handlePrint}
             className='bg-slate-900 hover:bg-slate-800 text-white font-extrabold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 shadow-sm'
           >
-            🖨️ Print / Save PDF
+            📄 Download Prescription PDF / Print
           </button>
 
           <div className='flex items-center gap-3 w-full sm:w-auto'>

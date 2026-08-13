@@ -248,6 +248,23 @@ const Login = ({ initialState = 'Login' }) => {
             </p>
           </div>
 
+          {/* ⚡ Quick Demo Autofill Credentials Pill Bar */}
+          <div className='p-2.5 bg-indigo-50/80 border border-indigo-100 rounded-xl flex items-center justify-between gap-2 text-[11px] font-extrabold text-indigo-700'>
+            <span className='flex items-center gap-1 shrink-0'>⚡ Quick Demo Fill:</span>
+            <button 
+              type="button"
+              onClick={() => {
+                setEmail('user@gmail.com')
+                setPassword('12345678')
+                setState('Login')
+                toast.info("✨ Demo Patient credentials filled! Click 'Sign In' below.")
+              }}
+              className='px-2.5 py-1 bg-white hover:bg-indigo-600 hover:text-white border border-indigo-200 rounded-lg shadow-2xs transition-all cursor-pointer'
+            >
+              👤 Patient Demo Login
+            </button>
+          </div>
+
           {/* Google SSO Button */}
           <button 
             type="button"

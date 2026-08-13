@@ -16,16 +16,16 @@ const TopDoctors = () => {
         Simply browse through our extensive list of trusted doctors.
       </p>
 
-      <div className='w-full grid grid-cols-auto gap-6 pt-8 px-3 sm:px-0'>
+      <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 pt-8 px-3 sm:px-0'>
         {doctors.slice(0, 10).map((item, index) => (
           <div 
             onClick={() => { navigate(`/appointment/${item._id}`); scrollTo(0, 0) }} 
             key={index} 
             className='bg-white border-2 border-indigo-200/90 hover:border-indigo-600 rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-slate-300/60 hover:shadow-2xl hover:shadow-indigo-500/25 hover:-translate-y-2.5 transition-all duration-300 group flex flex-col justify-between relative'
           >
-            <div className='bg-gradient-to-b from-indigo-100/80 via-indigo-50/50 to-white group-hover:from-indigo-100 group-hover:to-indigo-50 transition-colors overflow-hidden relative pt-2'>
-              <img className='w-full h-52 object-cover object-top group-hover:scale-105 transition-transform duration-500' src={item.image} alt={item.name} />
-              <div className='absolute top-3 right-3 bg-white/95 backdrop-blur-md border border-indigo-200/80 px-3 py-1 rounded-full text-xs font-extrabold text-indigo-700 shadow-md'>
+            <div className='bg-gradient-to-b from-indigo-100/90 via-slate-100/60 to-white group-hover:from-indigo-100 group-hover:to-indigo-50/50 transition-colors overflow-hidden relative aspect-[4/3.5] flex items-center justify-center p-2.5'>
+              <img className='w-full h-full object-cover object-top rounded-2xl group-hover:scale-105 transition-transform duration-500 shadow-sm bg-indigo-50/50' src={item.image} alt={item.name} />
+              <div className='absolute top-3.5 right-3.5 bg-white/95 backdrop-blur-md border border-indigo-200/80 px-3 py-1 rounded-full text-xs font-extrabold text-indigo-700 shadow-md z-10'>
                 {currencySymbol}{item.fees}
               </div>
             </div>

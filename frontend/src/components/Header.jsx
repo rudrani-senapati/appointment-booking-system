@@ -3,7 +3,24 @@ import { assets } from '../assets/assets'
 
 const Header = () => {
   return (
-    <div className='flex flex-col md:flex-row bg-gradient-to-r from-indigo-600 via-indigo-600 to-violet-600 rounded-3xl px-6 md:px-10 lg:px-16 shadow-xl shadow-indigo-200/50 overflow-hidden relative'>
+    <div className='space-y-4'>
+      {/* 🚨 24/7 Hospital Emergency Ambulance & ICU Hotline Banner */}
+      <div className='bg-gradient-to-r from-rose-900 via-rose-800 to-amber-900 text-white rounded-2xl px-5 py-3 shadow-lg border border-rose-500/30 flex flex-wrap items-center justify-between gap-3 text-xs font-bold'>
+        <div className='flex items-center gap-2.5'>
+          <span className='w-3 h-3 rounded-full bg-rose-500 animate-ping inline-block'></span>
+          <span className='text-rose-200 uppercase font-black tracking-wider text-[11px]'>🚨 24/7 Hospital Emergency Hotline:</span>
+          <a href="tel:108" className='bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded-lg font-mono font-black text-xs shadow-sm transition-all'>
+            📞 Dial 108 (Ambulance)
+          </a>
+        </div>
+        <div className='flex items-center gap-4 text-rose-100 text-[11px] font-extrabold'>
+          <span>🚑 Trauma Unit: Active</span>
+          <span className='hidden sm:inline'>•</span>
+          <span className='text-amber-300'>🏥 ICU Beds Available: 14/20</span>
+        </div>
+      </div>
+
+      <div className='flex flex-col md:flex-row bg-gradient-to-r from-indigo-600 via-indigo-600 to-violet-600 rounded-3xl px-6 md:px-10 lg:px-16 shadow-xl shadow-indigo-200/50 overflow-hidden relative'>
       {/* Background Decorative Ambient Radial Glow */}
       <div className='absolute -top-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none' />
       
@@ -29,6 +46,7 @@ const Header = () => {
       {/* -----------------Right Side Hero Image------------------- */}
       <div className='md:w-1/2 relative flex items-end justify-center'>
         <img className='w-full md:absolute bottom-0 h-auto rounded-b-2xl md:rounded-none max-w-lg object-contain drop-shadow-2xl' src={assets.header_img} alt="Hero Doctor" />
+      </div>
       </div>
     </div>
   )

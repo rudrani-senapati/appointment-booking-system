@@ -83,6 +83,13 @@ const AppContextProvider = (props) => {
 
     useEffect(() => {
         getDoctorsData()
+
+        // Auto-refresh doctors list every 10 seconds so database changes reflect live without page refresh
+        const interval = setInterval(() => {
+            getDoctorsData()
+        }, 10000)
+
+        return () => clearInterval(interval)
     }, [])
 
     useEffect(() => {

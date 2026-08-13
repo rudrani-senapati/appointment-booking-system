@@ -22,6 +22,11 @@ const Doctors = () => {
     { key: 'name', label: 'Name: A to Z', icon: '🔤' }
   ]
 
+  const [showAll, setShowAll] = useState(false)
+
+  // Display limited 8 doctors initially or all based on showAll toggle
+  const visibleDoctors = showAll ? filterDoc : filterDoc.slice(0, 8)
+
   const [showFilter, setShowFilter] = useState(false)
 
   // Helper to count doctors in a department safely
@@ -252,49 +257,63 @@ const Doctors = () => {
       {/* Full Width Doctor Cards Grid (4 Columns) */}
       <div>
         {filterDoc.length > 0 ? (
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-            {filterDoc.map((item, index) => (
-              <div 
-                onClick={() => { navigate(`/appointment/${item._id}`); scrollTo(0, 0) }} 
-                key={index} 
-                className='bg-white border-2 border-indigo-200/90 hover:border-indigo-600 rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-slate-300/60 hover:shadow-2xl hover:shadow-indigo-500/25 hover:-translate-y-2.5 transition-all duration-300 group flex flex-col justify-between relative'
-              >
-                <div className='bg-gradient-to-b from-indigo-100/80 via-indigo-50/50 to-white group-hover:from-indigo-100 group-hover:to-indigo-50 transition-colors overflow-hidden relative pt-2'>
-                  <img className='w-full h-52 object-cover object-top group-hover:scale-105 transition-transform duration-500' src={item.image} alt={item.name} />
-                  <div className='absolute top-3 right-3 bg-white/95 backdrop-blur-md border border-indigo-200/80 px-3 py-1 rounded-full text-xs font-extrabold text-indigo-700 shadow-md'>
+          <div className='space-y-8'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+              {visibleDoctors.map((item, index) => (
+                <div 
+                  onClick={() => { navigate(`/appointment/${item._id}`); scrollTo(0, 0) }} 
+                  key={index} 
+                  className='bg-white border-2 border-indigo-200/90 hover:border-indigo-600 rounded-3xl overflow-hidden cursor-pointer shadow-xl shadow-slate-300/60 hover:shadow-2xl hover:shadow-indigo-500/25 hover:-translate-y-2.5 transition-all duration-300 group flex flex-col justify-between relative'
+                >
+                <div className='bg-gradient-to-b from-indigo-100/90 via-slate-100/60 to-white group-hover:from-indigo-100 group-hover:to-indigo-50/50 transition-colors overflow-hidden relative aspect-[4/3.5] flex items-center justify-center p-2'>
+                  <img className='w-full h-full object-cover object-top rounded-2xl group-hover:scale-105 transition-transform duration-500 shadow-sm bg-indigo-50/50' src={item.image} alt={item.name} />
+                  <div className='absolute top-3 right-3 bg-white/95 backdrop-blur-md border border-indigo-200/80 px-3 py-1 rounded-full text-xs font-extrabold text-indigo-700 shadow-md z-10'>
                     {currencySymbol}{item.fees}
                   </div>
                 </div>
 
-                <div className='p-5 flex flex-col gap-2 bg-white'>
-                  <div className={`inline-flex items-center gap-2 text-xs font-bold ${item.available ? 'text-emerald-600' : 'text-slate-400'}`}>
-                    <span className={`relative flex h-2.5 w-2.5`}>
-                      <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${item.available ? 'bg-emerald-400' : 'bg-slate-400'} opacity-75`}></span>
-                      <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${item.available ? 'bg-emerald-500' : 'bg-slate-400'}`}></span>
-                    </span>
-                    <span>{item.available ? 'Available Today' : 'Not Available'}</span>
-                  </div>
-                  
-                  <h2 className='text-slate-900 text-lg font-extrabold group-hover:text-indigo-600 transition-colors mt-0.5'>
-                    {item.name}
-                  </h2>
-                  <p className='text-indigo-700 text-xs font-bold bg-indigo-50 border border-indigo-100/80 px-3 py-1 rounded-lg w-max shadow-sm'>
-                    {item.speciality}
-                  </p>
-
-                  {/* Clinic Address & Direction Link */}
-                  {item.address && (
-                    <div className='mt-2 pt-2 border-t border-slate-100 text-xs text-slate-600 space-y-0.5'>
-                      <p className='font-bold text-slate-800 flex items-center justify-between text-[11px]'>
-                        <span>📍 Clinic Address:</span>
-                        <span className='text-[10px] text-indigo-600 font-extrabold underline'>Map ↗</span>
-                      </p>
-                      <p className='truncate text-slate-500 text-[11px]'>{item.address.line1}, {item.address.line2}</p>
+                  <div className='p-5 flex flex-col gap-2 bg-white'>
+                    <div className={`inline-flex items-center gap-2 text-xs font-bold ${item.available ? 'text-emerald-600' : 'text-slate-400'}`}>
+                      <span className={`relative flex h-2.5 w-2.5`}>
+                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${item.available ? 'bg-emerald-400' : 'bg-slate-400'} opacity-75`}></span>
+                        <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${item.available ? 'bg-emerald-500' : 'bg-slate-400'}`}></span>
+                      </span>
+                      <span>{item.available ? 'Available Today' : 'Not Available'}</span>
                     </div>
-                  )}
+                    
+                    <h2 className='text-slate-900 text-lg font-extrabold group-hover:text-indigo-600 transition-colors mt-0.5'>
+                      {item.name}
+                    </h2>
+                    <p className='text-indigo-700 text-xs font-bold bg-indigo-50 border border-indigo-100/80 px-3 py-1 rounded-lg w-max shadow-sm'>
+                      {item.speciality}
+                    </p>
+
+                    {/* Clinic Address Preview */}
+                    {item.address && (
+                      <div className='mt-2 pt-2 border-t border-slate-100 text-xs text-slate-600 space-y-0.5'>
+                        <p className='font-bold text-slate-800 flex items-center justify-between text-[11px]'>
+                          <span>📍 Clinic Address:</span>
+                          <span className='text-[10px] text-indigo-600 font-extrabold underline'>Map ↗</span>
+                        </p>
+                        <p className='truncate text-slate-500 text-[11px]'>{item.address.line1}, {item.address.line2}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            {/* 🔘 TOGGLE SHOW MORE / SHOW LESS BUTTON */}
+            {filterDoc.length > 8 && (
+              <div className='flex justify-center pt-2'>
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className='px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:to-pink-700 text-white font-black text-xs uppercase tracking-wider shadow-xl shadow-purple-500/25 border-2 border-indigo-400 transition-all transform hover:scale-105 cursor-pointer flex items-center gap-2'
+                >
+                  <span>{showAll ? '👆 SHOW FEWER DOCTORS' : `👇 VIEW ALL DOCTORS (${filterDoc.length})`}</span>
+                </button>
               </div>
-            ))}
+            )}
           </div>
         ) : (
           <div className='py-16 text-center bg-white border-2 border-indigo-200/80 rounded-3xl shadow-xl p-8 flex flex-col items-center gap-4'>
