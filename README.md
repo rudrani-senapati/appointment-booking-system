@@ -1,4 +1,4 @@
-# ?? CarePulse | Medical Care & Doctor Appointment Booking System
+#  CarePulse | Medical Care & Doctor Appointment Booking System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev)
@@ -9,35 +9,35 @@
 
 ---
 
-## ?? Live Application Demos
+##  Live Application Demos
 
 | Application Portal | Live Demo Link | Description |
 | :--- | :--- | :--- |
-| **?? Patient Portal** | [Live Demo ?](https://appointment-booking-system-frontend-flax.vercel.app/) | Browse doctors, book appointment slots, view health vault & live chat |
-| **??? Admin & Doctor Portal** | [Live Demo ?](https://appointment-booking-system-admin-five.vercel.app/) | Hospital management, doctor practice desk & appointment queue |
+| **?? Patient Portal** | [Live Demo ?](appointment-booking-system-seven-lac.vercel.app) | Browse doctors, book appointment slots, view health vault & live chat |
+| **??? Admin & Doctor Portal** | [Live Demo ?](appointment-booking-system-3t1t.vercel.app) | Hospital management, doctor practice desk & appointment queue |
 
 ---
 
-## ? Features
+##  Features
 
-### ?? Patient Portal
+###  Patient Portal
 - **Doctor Directory**: Search & filter verified doctors across 12 medical specialities.
 - **Smart Booking**: Real-time 7-day slot availability picker with instant confirmation.
 - **Consultation Modes**: Support for both **In-Clinic Visits** and **Online Video Calls**.
 - **Health Vault & E-Prescriptions**: Printable digital prescription PDF downloads.
 - **SMS Notifications & Live Assistant**: Booking confirmation SMS and instant AI chat support.
 
-### ????? Doctor Portal
+###  Doctor Portal
 - Manage daily patient consultation queues and update appointment statuses.
 - Write digital e-prescriptions and toggle practice availability.
 
-### ??? Admin Portal
+###  Admin Portal
 - Onboard certified doctors and manage hospital operational rosters.
 - System-wide analytics and real-time live data synchronization.
 
 ---
 
-## ??? Tech Stack
+##  Tech Stack
 
 - **Frontend & Admin**: React 19, Vite, TailwindCSS, React Router
 - **Backend**: Node.js, Express.js, MongoDB (Mongoose)
@@ -45,7 +45,7 @@
 
 ---
 
-## ?? Local Setup Guide
+##  Local Setup Guide
 
 ### 1. Clone Repository
 ```bash
@@ -76,5 +76,5 @@ npm run dev
 
 ---
 
-## ??? License
+##  License
 Distributed under the MIT License.
