@@ -9,6 +9,15 @@
 
 ---
 
+## ?? Live Application Demos
+
+| Application Portal | Live Demo Link | Description |
+| :--- | :--- | :--- |
+| **?? Patient Portal** | [Live Demo ?](https://appointment-booking-system-frontend-flax.vercel.app/) | Browse doctors, book appointment slots, view health vault & live chat |
+| **??? Admin & Doctor Portal** | [Live Demo ?](https://appointment-booking-system-admin-five.vercel.app/) | Hospital management, doctor practice desk & appointment queue |
+
+---
+
 ## ? Features
 
 ### ?? Patient Portal
