@@ -13,8 +13,8 @@
 
 | Application Portal | Live Demo Link | Description |
 | :--- | :--- | :--- |
-| **?? Patient Portal** | [Live Demo ?](appointment-booking-system-seven-lac.vercel.app) | Browse doctors, book appointment slots, view health vault & live chat |
-| **??? Admin & Doctor Portal** | [Live Demo ?](appointment-booking-system-3t1t.vercel.app) | Hospital management, doctor practice desk & appointment queue |
+| **?? Patient Portal** | [Live Demo ?](https://appointment-booking-system-seven-lac.vercel.app/) | Browse doctors, book appointment slots, view health vault & live chat |
+| **??? Admin & Doctor Portal** | [Live Demo ?](https://appointment-booking-system-3t1t.vercel.app/) | Hospital management, doctor practice desk & appointment queue |
 
 ---
 
