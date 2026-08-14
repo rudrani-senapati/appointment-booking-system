@@ -1,74 +1,42 @@
-# ?? CarePulse | Enterprise Medical Care & Doctor Appointment Booking System
+# ?? CarePulse | Medical Care & Doctor Appointment Booking System
 
-[![Live Patient Portal](https://img.shields.io/badge/Patient_Portal-Vercel-indigo?style=for-the-badge&logo=vercel)](https://carepulse-patient.vercel.app)
-[![Live Admin Portal](https://img.shields.io/badge/Admin_&_Doctor_Portal-Vercel-purple?style=for-the-badge&logo=vercel)](https://carepulse-admin.vercel.app)
-[![Backend API Status](https://img.shields.io/badge/Node_Backend-Render_Live-emerald?style=for-the-badge&logo=render)](https://carepulse-backend.onrender.com)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=nodedotjs)](https://nodejs.org)
+[![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb)](https://mongodb.com)
 
-**CarePulse** is a production-ready, full-stack digital healthcare and telehealth management system designed for seamless interactions between **Patients**, **Certified Doctors**, and **Hospital Administrators**.
-
-Built with **React (Vite)**, **Node.js (Express)**, **MongoDB Atlas**, **TailwindCSS**, **Cloudinary**, and **Twilio**, CarePulse provides real-time state synchronization, instant SMS booking reminders, printable E-Prescription PDF downloads, and an interactive AI clinical assistant.
+**CarePulse** is a modern, full-stack digital healthcare and doctor appointment booking application designed for **Patients**, **Doctors**, and **Hospital Administrators**.
 
 ---
 
-## ? Key Features Across Portals
+## ? Features
 
-### ?? 1. Patient Portal (`/frontend`)
-- **Doctor Directory & Speciality Filtering**: Browse verified medical specialists across 12 medical departments (Cardiology, Dermatology, Neurology, Pediatrics, etc.).
-- **Smart Appointment Booking**: Real-time 7-day slot availability picker with instant slot locking.
-- **Dual Consultation Modes**: Choose between **In-Clinic Medical Visit** or **HD Telehealth Video Call**.
-- **?? Health Vault & Digital Rx**: View detailed medical records and download official printable **Prescription PDFs** with doctor signatures and clinical diagnoses.
-- **?? Twilio SMS Confirmations**: Instant SMS alerts dispatched upon successful booking.
-- **?? CarePulse Live Support Widget**: Interactive AI clinical chat assistant for instant medical query resolution.
-- **Razorpay Online Payment & Pay at Clinic**: Multi-mode payment gateway integration.
+### ?? Patient Portal
+- **Doctor Directory**: Search & filter verified doctors across 12 medical specialities.
+- **Smart Booking**: Real-time 7-day slot availability picker with instant confirmation.
+- **Consultation Modes**: Support for both **In-Clinic Visits** and **Online Video Calls**.
+- **Health Vault & E-Prescriptions**: Printable digital prescription PDF downloads.
+- **SMS Notifications & Live Assistant**: Booking confirmation SMS and instant AI chat support.
 
-### ????? 2. Doctor Specialist Desk (`/admin`)
-- **Executive Practice Profile**: Customizable consultation fee in ? INR, practice locations, and 1-click availability toggles.
-- **Live Consultation Queue**: Reflowable appointment stream table with real-time status management.
-- **E-Prescription Desk**: Digital prescription creator to write medicines, dosage, diagnosis notes, and patient instructions.
-- **Earnings & Patient Telemetry**: Visual metrics tracking patient counts, consultation revenue, and appointment fulfillment rates.
+### ????? Doctor Portal
+- Manage daily patient consultation queues and update appointment statuses.
+- Write digital e-prescriptions and toggle practice availability.
 
-### ??? 3. Hospital Admin Command Center (`/admin`)
-- **Specialist Doctor Onboarding**: Add new doctors with photo upload via Cloudinary, degree verification, and speciality assignment.
-- **Hospital Roster Control**: Complete oversight of all appointments, doctor statuses, and system metrics.
-- **Real-Time Live Auto-Polling**: 10-second automatic background sync keeps all portals updated live without page reloads.
+### ??? Admin Portal
+- Onboard certified doctors and manage hospital operational rosters.
+- System-wide analytics and real-time live data synchronization.
 
 ---
 
-## ??? Technology Stack
+## ??? Tech Stack
 
-### **Frontend & Admin Command Center**
-- **Core Framework**: React 19 (Vite 6)
-- **Styling & Design System**: TailwindCSS, Vanilla CSS Utilities, Responsive Glassmorphism
-- **Routing & State**: React Router v7, React Context API with 10s Live Auto-Polling
-- **Icons & UI**: Lucide Icons, Custom SVG Brand Badges, React Toastify
-
-### **Backend & Cloud Infrastructure**
-- **Runtime & Server**: Node.js, Express.js
-- **Database & ORM**: MongoDB Atlas, Mongoose
-- **Image Storage**: Cloudinary REST API
-- **SMS Communications**: Twilio Messaging Service API
-- **Authentication**: JSON Web Tokens (JWT), Bcrypt Password Hashing
+- **Frontend & Admin**: React 19, Vite, TailwindCSS, React Router
+- **Backend**: Node.js, Express.js, MongoDB (Mongoose)
+- **Services**: Cloudinary (Media Storage), Twilio (SMS), Razorpay (Payments)
 
 ---
 
-## ?? Live Demo & Screenshots
-
-| Portal | URL | Demo Credentials |
-| :--- | :--- | :--- |
-| **Patient Portal** | [carepulse-patient.vercel.app](https://carepulse-patient.vercel.app) | `user@gmail.com` / `12345678` |
-| **Doctor Portal** | [carepulse-admin.vercel.app](https://carepulse-admin.vercel.app) | `doc1@greatstack.dev` / `12345678` |
-| **Admin Portal** | [carepulse-admin.vercel.app](https://carepulse-admin.vercel.app) | `admin@greatstack.dev` / `12345678` |
-| **Backend API** | [carepulse-backend.onrender.com](https://carepulse-backend.onrender.com) | GET `/` ? `API WORKING` |
-
----
-
-## ?? Local Installation & Setup
-
-### Prerequisites
-- Node.js `v18+` or `v20+`
-- npm `v9+`
-- MongoDB Atlas Connection URI
+## ?? Local Setup Guide
 
 ### 1. Clone Repository
 ```bash
@@ -80,67 +48,24 @@ cd appointment-booking-system
 ```bash
 cd backend
 npm install
-```
-Create a `.env` file inside `/backend`:
-```env
-PORT=4000
-MONGODB_URI=your_mongodb_atlas_uri
-JWT_SECRET=your_jwt_secret_key
-CLOUDINARY_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_SECRET_KEY=your_cloudinary_secret_key
-ADMIN_EMAIL=admin@greatstack.dev
-ADMIN_PASSWORD=12345678
-RAZORPAY_KEY_ID=your_razorpay_key
-RAZORPAY_KEY_SECRET=your_razorpay_secret
-CURRENCY=INR
-```
-Start Backend Server:
-```bash
-npm run server
+npm start
 ```
 
-### 3. Frontend Setup (Patient App)
+### 3. Frontend Setup
 ```bash
 cd ../frontend
 npm install
-```
-Create a `.env` file inside `/frontend`:
-```env
-VITE_BACKEND_URL=http://localhost:4000
-VITE_RAZORPAY_KEY_ID=your_razorpay_key
-```
-Start Frontend App:
-```bash
 npm run dev
 ```
 
-### 4. Admin & Doctor Setup
+### 4. Admin Setup
 ```bash
 cd ../admin
 npm install
-```
-Create a `.env` file inside `/admin`:
-```env
-VITE_BACKEND_URL=http://localhost:4000
-```
-Start Admin App:
-```bash
 npm run dev
 ```
-
----
-
-## ?? Deployment Configuration
-
-- **Backend**: Hosted on **Render** (Root directory: `backend`, Build: `npm install`, Start: `npm start`).
-- **Frontend**: Hosted on **Vercel** (Root directory: `frontend`, Framework: `Vite`, Output: `dist`).
-- **Admin**: Hosted on **Vercel** (Root directory: `admin`, Framework: `Vite`, Output: `dist`).
 
 ---
 
 ## ??? License
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-? *If you find CarePulse useful, consider giving this repository a star!*
+Distributed under the MIT License.
