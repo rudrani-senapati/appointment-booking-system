@@ -28,7 +28,7 @@ const Features = () => {
     <div className='mt-12 mb-8 pt-8 pb-6 border-t border-slate-200/80'>
       <div className='text-center mb-10'>
         <span className='px-4 py-1.5 rounded-full bg-indigo-100/80 text-indigo-700 text-xs font-bold uppercase tracking-wider shadow-sm border border-indigo-200/60'>
-          Why Choose Prescripto
+          Why Choose CarePulse
         </span>
         <h2 className='text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 tracking-tight'>
           Healthcare Built Around Your Needs
